@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分类2文章列表 - 干货分享</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header>
+        <h1>web </h1>
+        <nav class="nav-menu">
+            <button class="menu-toggle">☰</button>
+            <ul class="nav-list">
+                <li><a href="../index.html">返回主页</a></li>
+                <li><a href="../data/block1-full-list.html">分类1</a></li>
+                <li><a href="../data/block2-full-list.html">分类2</a></li>
+                <li><a href="../data/block3-full-list.html">分类3</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="full-list">
+            <h2>分类2文章</h2>
+            <ul class="article-list" id="block2-list"></ul>
+            <div class="pagination">
+                <button id="prev-page">上一页</button>
+                <span id="page-info"></span>
+                <button id="next-page">下一页</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2025 . All Rights Reserved.</p>
+    </footer>
+
+    <script src="../js/script.js"></script>
+    <script>
+        const currentCategory = 'block2';
+    </script>
+</body>
+</html>

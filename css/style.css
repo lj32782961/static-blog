@@ -1,0 +1,290 @@
+/* 重置默认样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f4f4f4;
+    margin-bottom: 160px; /* 为pagination和footer预留空间 */
+}
+
+/* 头部导航 */
+header {
+    background-color: #2c3e50;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+}
+
+.nav-menu {
+    margin-top: 1rem;
+}
+
+.nav-list {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.nav-list li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.nav-list li a:hover {
+    color: #3498db;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: white;
+    cursor: pointer;
+}
+
+/* 搜索框 */
+.search-container {
+    margin: 1rem 0;
+}
+
+#search-input {
+    padding: 0.5rem;
+    width: 80%;
+    max-width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* 主内容区域 */
+.article-blocks {
+    padding: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+}
+
+.block {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    width: 100%;
+    max-width: 350px;
+}
+
+.block h2 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+.full-list {
+    max-width: 800px; /* 设置最大宽度，限制内容宽度 */
+    margin: 2rem auto; /* 上下外边距2rem，左右自动居中 */
+    padding: 0 1rem; /* 左右内边距1rem，留出小幅空白 */
+}
+
+.full-list h2 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    text-align: center; /* 标题居中 */
+}
+
+.article-list {
+    /*list-style: none;*/
+}
+
+.article-list li {
+    margin: 0.5rem 0;
+}
+
+.article-list li a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+.article-list li a:hover {
+    text-decoration: underline;
+}
+
+.more-link {
+    display: block;
+    margin-top: 1rem;
+    color: #3498db;
+    text-decoration: none;
+}
+
+.more-link:hover {
+    text-decoration: underline;
+}
+
+.returnhome {
+    position: fixed; /* 固定在底部 */
+    bottom: 60px;    /* 距离底部50px，留出footer空间 */
+    left: 0;
+    width: 100%;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.9); /* 半透明白背景，避免遮挡内容 */
+    padding: 0.5rem 0;
+    z-index: 1000;   /* 确保在内容之上 */
+}
+
+.returnhome1 a {
+    background-color: #f0f5fa; /*  一个比父元素略深的浅蓝色，区分度适中 */
+    color: #337ab7; /*  与背景色对比明显的深蓝色文字 */
+    font-weight: bold;
+    text-decoration: none; /* 去除下划线 */
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(27, 26, 26, 0.1);
+    padding: 10px 20px; /*  增加了水平padding，让按钮更宽一些 */
+    transition: background-color 0.3s ease; /* 添加过渡效果，使点击更顺畅 */
+}
+.returnhome a{
+    padding: 0.5rem 1rem;
+    margin: 0 0.5rem;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none; /* 去除下划线 */
+}
+.returnhome a:hover {
+    background-color: #d0e0f5; /*  鼠标悬停时，背景颜色略微加深 */
+}
+
+/* 分页样式 */
+.pagination {
+    position: fixed; /* 固定在底部 */
+    bottom: 60px;    /* 距离底部50px，留出footer空间 */
+    left: 0;
+    width: 100%;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.9); /* 半透明白背景，避免遮挡内容 */
+    padding: 0.5rem 0;
+    z-index: 1000;   /* 确保在内容之上 */
+}
+
+.pagination button {
+    padding: 0.5rem 1rem;
+    margin: 0 0.5rem;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.pagination button:disabled {
+    background-color: #7f8c8d;
+    cursor: not-allowed;
+}
+
+.pagination span {
+    font-size: 1rem;
+    margin: 0 1rem;
+}
+
+/* 文章内容页面 */
+.content {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+    text-align: center; /* 保持标题居中 */
+  }
+  
+  .content .meta {
+    font-size: 1rem;
+    color: #777;
+    margin-bottom: 2rem;
+    text-align: center; /* 保持元数据居中 */
+  }
+  
+  .content p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+  
+  .content img.responsive-img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    /*margin: 1rem 0;*/
+    margin: 1rem auto;
+  }
+  
+  .content a {
+    color: #007bff;
+    text-decoration: underline;
+  }
+
+/* 页脚 */
+footer {
+    text-align: center;
+    padding: 1rem;
+    background-color: #2c3e50;
+    color: white;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .nav-list {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        background-color: #2c3e50;
+        padding: 1rem 0;
+    }
+
+    .nav-list.active {
+        display: flex;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .article-blocks {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .block {
+        max-width: 100%;
+    }
+
+    /* 调整pagination在小屏幕上的样式 */
+    .pagination {
+        bottom: 40px; /* 在手机上稍微上移 */
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .block {
+        max-width: 45%;
+    }
+}
