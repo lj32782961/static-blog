@@ -100,7 +100,7 @@ header {
 }
 
 .article-list {
-    /*list-style: none;*/
+    list-style:true;
     
 }
 
