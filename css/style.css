@@ -350,6 +350,6 @@ footer {
         display: none;
       }
       .nav-list {
-        display: flex;
+        display: none;
       }
 }
