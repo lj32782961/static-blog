@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         const li = document.createElement('li');
                         li.innerHTML = `
                         <i class="bullet">•</i>
-                        <a href="${article.url}">${article.title}</a>
+                        <a href="data/${article.url}">${article.title}</a>
                         <span class="article-date">${article.date}</span>
                     `;
                         articleList.appendChild(li);
