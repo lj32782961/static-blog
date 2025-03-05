@@ -25,9 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 navList.classList.remove('active');
             }
         });
-    
         
-    }
+    };
+
 
     // 主页加载
     if (document.querySelector('.article-blocks')) {
