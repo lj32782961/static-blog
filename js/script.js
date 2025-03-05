@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         
-    };
+    }
 
 
     // 主页加载
