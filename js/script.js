@@ -90,7 +90,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     paginatedArticles.forEach(article => {
                         const li = document.createElement('li');
-                        li.innerHTML = `<a href="${article.url}">${article.title}</a>`;
+                        li.innerHTML = `
+                        <a href="${article.url}">${article.title}</a>
+                        <span class="article-date">${article.date}</span>
+                    `;
                         articleList.appendChild(li);
                     });
                     

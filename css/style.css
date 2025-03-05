@@ -101,10 +101,15 @@ header {
 
 .article-list {
     /*list-style: none;*/
+    
 }
 
 .article-list li {
-    margin: 0.5rem 0;
+    /* margin: 0.5rem 0; */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
 }
 
 .article-list li a {
@@ -114,6 +119,13 @@ header {
 
 .article-list li a:hover {
     text-decoration: underline;
+}
+
+.article-date {
+    color: #666;
+    font-size: 0.9em;
+    margin-left: 10px;
+    white-space: nowrap;
 }
 
 .more-link {
