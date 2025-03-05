@@ -2,30 +2,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // 导航菜单展开/收起
     const menuToggle = document.querySelector('.menu-toggle');
     const navList = document.querySelector('.nav-menu .nav-list');
-    const navLinks = document.querySelectorAll('.nav-list li a');
-    // 检查元素是否存在
     if (menuToggle && navList) {
-        // 点击菜单按钮切换菜单显示
-        menuToggle.addEventListener('click', (e) => {
-            e.stopPropagation(); // 阻止事件冒泡到document
+        menuToggle.addEventListener('click', () => {
             navList.classList.toggle('active');
         });
-
-        // 点击菜单内的链接关闭菜单
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                navList.classList.remove('active');
-            });
-        });
-
-        // 点击页面空白处关闭菜单
-        document.addEventListener('click', (e) => {
-            // 如果点击的不是菜单本身或菜单按钮，则关闭菜单
-            if (!navList.contains(e.target) && !menuToggle.contains(e.target)) {
-                navList.classList.remove('active');
-            }
-        });
-    
         
     }
 

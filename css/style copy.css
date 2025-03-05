@@ -36,18 +36,8 @@ header {
     position: absolute;
     top: 100%; /* 初始位置在 header 下方 */
     left:0;
-    width: 50%;
+    width: 100%;
     display: none; /* 默认隐藏 */
-    flex-direction: column;
-    background-color: #2c3e50;
-    padding: 1rem 0;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    z-index: 1001; /* 确保菜单在其他内容之上 */
-}
-
-.nav-list.active {
-    display: flex;
 }
 
 .nav-list li a {
@@ -67,7 +57,6 @@ header {
     font-size: 1.5rem;
     color: white;
     cursor: pointer;
-    transition: transform 0.3s ease; /* 添加旋转过渡效果 */
 }
 
 /* 搜索框 */
@@ -291,14 +280,13 @@ footer {
         position: absolute;
         top: 100%;/* 从菜单按钮下方开始 */
         left: 0;
-        width: 100%;
+        width: 50%;
         padding: 1rem 0;
         background-color: #2c3e50; /* 添加背景颜色 */
         border-radius: 5px; /* 添加圆角 */
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 添加阴影 */
         display: flex;
         /*border: 1px solid white;  /*添加白色边框 */
-        z-index: 1001;
         
     }
 
@@ -317,15 +305,14 @@ footer {
         font-size: 1.5rem;
         color: rgb(255, 255, 255);
         cursor: pointer;
-        transition: transform 0.3s ease; /* 添加旋转过渡效果 */
     }
     /*  关键部分：根据 active 类改变按钮样式 */
-    /* .nav-menu > .nav-list.active ~ .menu-toggle {
+    .nav-menu > .nav-list.active ~ .menu-toggle {
         transform: rotate(90deg);
     }
     .nav-menu > .nav-list:not(.active) ~ .menu-toggle {
         transform: rotate(0deg);
-    } */
+    }
 
     .article-blocks {
         flex-direction: column;
