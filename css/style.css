@@ -30,6 +30,7 @@ header {
     display: flex;
     justify-content: center;
     gap: 1.5rem;
+    display: none;/* 添加这个，让列表在默认情况下隐藏 */
 }
 
 .nav-list li a {
@@ -267,14 +268,17 @@ footer {
 /* 响应式设计 */
 @media (max-width: 768px) {
     .nav-list {
-        display: none;
+        /* display: none; */
         flex-direction: column;
         position: absolute;
-        top: 60px;
+        top: 100%;/* 从菜单按钮下方开始 */
         left: 0;
         width: 100%;
         background-color: #2c3e50;
         padding: 1rem 0;
+        background-color: #f0f0f0; /* 添加背景颜色 */
+        border-radius: 5px; /* 添加圆角 */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 添加阴影 */
     }
 
     .nav-list.active {
@@ -283,6 +287,18 @@ footer {
 
     .menu-toggle {
         display: block;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: white;
+        cursor: pointer;
+    }
+    /*  关键部分：根据 active 类改变按钮样式 */
+    .nav-list.active ~ .menu-toggle {
+        transform: rotate(90deg); /* 旋转 90 度 */
+    }
+    .nav-list:not(.active) ~ .menu-toggle {
+        transform: rotate(0deg); /* 默认状态旋转 0 度 */
     }
 
     .article-blocks {
@@ -304,4 +320,10 @@ footer {
     .block {
         max-width: 45%;
     }
+    .menu-toggle {
+        display: none;
+      }
+      .nav-list {
+        display: flex;
+      }
 }
