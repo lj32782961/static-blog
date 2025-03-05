@@ -15,6 +15,7 @@ body {
 
 /* 头部导航 */
 header {
+    position: relative;
     background-color: #2c3e50;
     color: white;
     padding: 1rem;
@@ -23,14 +24,20 @@ header {
 
 .nav-menu {
     margin-top: 1rem;
+    position: relative; /* 为了方便定位子菜单 */
 }
 
 .nav-list {
     list-style: none;
-    display: flex;
+    /* display: flex; */
     justify-content: center;
     gap: 1.5rem;
     /*在移动端，默认display:flex; 通过JavaScript和active类控制显示和隐藏*/
+    position: absolute;
+    top: 100%; /* 初始位置在 header 下方 */
+    left:0;
+    width: 100%;
+    display: none; /* 默认隐藏 */
 }
 
 .nav-list li a {
@@ -276,10 +283,10 @@ footer {
         width: 100%;
         background-color: #2c3e50;
         padding: 1rem 0;
-        background-color: #f0f0f0; /* 添加背景颜色 */
+        background-color: #2c3e50; /* 添加背景颜色 */
         border-radius: 5px; /* 添加圆角 */
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 添加阴影 */
-        display: flex; /*修改为在移动端显示菜单*/
+        display: flex;
     }
 
     .nav-list:not(.active){
@@ -295,15 +302,15 @@ footer {
         background: none;
         border: none;
         font-size: 1.5rem;
-        color: white;
+        color: rgb(255, 255, 255);
         cursor: pointer;
     }
     /*  关键部分：根据 active 类改变按钮样式 */
-    .nav-list.active ~ .menu-toggle {
-        transform: rotate(90deg); /* 旋转 90 度 */
+    .nav-menu > .nav-list.active ~ .menu-toggle {
+        transform: rotate(90deg);
     }
-    .nav-list:not(.active) ~ .menu-toggle {
-        transform: rotate(0deg); /* 默认状态旋转 0 度 */
+    .nav-menu > .nav-list:not(.active) ~ .menu-toggle {
+        transform: rotate(0deg);
     }
 
     .article-blocks {
