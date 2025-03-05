@@ -100,7 +100,7 @@ header {
 }
 
 .article-list {
-    list-style-type: disc;  /* 添加黑点 */
+    list-style-type: circle;  /* 添加黑点 */
     padding-left: 20px;    /* 给黑点留出空间 */
     
 }
