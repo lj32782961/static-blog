@@ -41,7 +41,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     const latestArticles = articles.slice(0, 10);
                     latestArticles.forEach(article => {
                         const li = document.createElement('li');
-                        li.innerHTML = `<a href="data/${article.url}">${article.title}</a>`;
+                        li.innerHTML = `
+                        <i class="bullet">•</i>
+                        <a href="${article.url}">${article.title}</a>
+                        <span class="article-date">${article.date}</span>
+                    `;
                         articleList.appendChild(li);
                     });
                     block.querySelector('.more-link').style.display = articles.length > 10 ? 'block' : 'none';
