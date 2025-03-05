@@ -100,8 +100,7 @@ header {
 }
 
 .article-list {
-    list-style-type: circle;  /* 添加黑点 */
-    padding-left: 20px;    /* 给黑点留出空间 */
+    /* list-style: none;   */
     
 }
 
@@ -120,6 +119,11 @@ header {
 
 .article-list li a:hover {
     text-decoration: underline;
+}
+
+.bullet {
+    margin-right: 8px;
+    color: #000;
 }
 
 .article-date {
