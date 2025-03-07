@@ -29,16 +29,16 @@
 
     <script>
         // 分享内容配置
-        const shareData2 = {
-            title:document.title || '网页标题', // 自动获取页面标题
-            text: document.getElementById('summary')?.textContent || '默认摘要', // 获取特定元素内容
-            url: '链接： '+window.location.href // 当前页面URL
-        };
-
         const shareData = {
             title:document.title || '网页标题', // 自动获取页面标题
+            text: document.getElementById('summary')?.textContent || '默认摘要', // 获取特定元素内容
+            url: '链接： ' + window.location.href // 当前页面URL
+        };
+
+        const shareData0 = {
+            title:document.title || '网页标题', // 自动获取页面标题
             // text:document.title+'\n'+ document.getElementById('summary')?.textContent || '默认摘要' +'链接： '+ '\n'+ window.location.href, // 获取特定元素内容
-            text: `${document.title}\n${document.getElementById('summary')?.textContent || '默认摘要'}\n链接： ${window.location.href}`,
+            text: `${document.title}\n${document.getElementById('summary')?.textContent || '   '}\n链接： ${window.location.href}`,
             // url: '链接： '+window.location.href // 当前页面URL
         };
 
@@ -46,7 +46,7 @@
             try {
                 // 首先尝试使用 Web Share API (适用于支持的移动设备和浏览器)
                 if (navigator.share) {
-                    await navigator.share(shareData);
+                    await navigator.share(shareData0);
                     console.log('分享成功~');
                 } else {
                     // 如果不支持Web Share API，执行复制到剪贴板
