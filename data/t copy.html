@@ -121,6 +121,15 @@
         function closeMenu() {
             contextMenu.style.display = 'none';
         }
+
+        // 阻止移动端长按默认行为
+        document.addEventListener('touchstart', (e) => {
+            let touchTimer;
+            touchTimer = setTimeout(() => {
+                e.preventDefault(); // 阻止默认长按菜单
+            }, 300); // 300ms 算长按
+            document.addEventListener('touchend', () => clearTimeout(touchTimer), { once: true });
+        });
     </script>
 </body>
 </html>
