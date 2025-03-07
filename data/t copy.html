@@ -55,7 +55,7 @@
         // 监听选择事件
         document.addEventListener('mouseup', showContextMenu); // 电脑端
         document.addEventListener('touchend', showContextMenu); // 移动端
-        document.addEventListener('contextmenu', (e) => e.preventDefault()); // 阻止默认右键菜单
+        // document.addEventListener('contextmenu', (e) => e.preventDefault()); // 阻止默认右键菜单
 
         function showContextMenu(event) {
             // 获取选中的文本
@@ -122,14 +122,7 @@
             contextMenu.style.display = 'none';
         }
 
-        // 阻止移动端长按默认行为
-        document.addEventListener('touchstart', (e) => {
-            let touchTimer;
-            touchTimer = setTimeout(() => {
-                e.preventDefault(); // 阻止默认长按菜单
-            }, 300); // 300ms 算长按
-            document.addEventListener('touchend', () => clearTimeout(touchTimer), { once: true });
-        });
+        
     </script>
 </body>
 </html>
