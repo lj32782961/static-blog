@@ -32,7 +32,7 @@
         const shareData = {
             title:document.title || '网页标题', // 自动获取页面标题
             text: document.getElementById('summary')?.textContent || '默认摘要', // 获取特定元素内容
-            url: window.location.href // 当前页面URL
+            url: '链接： '+window.location.href // 当前页面URL
         };
 
         async function shareContent() {
@@ -59,7 +59,7 @@
             // 使用 Clipboard API 复制到剪贴板
             navigator.clipboard.writeText(textToCopy)
                 .then(() => {
-                    alert('已复制到剪贴板！\n你可以粘贴到任何APP分享\n\n内容如下:\n' + textToCopy);
+                    alert('已复制到剪贴板！\n你可以粘贴到其他APP分享\n内容如下:\n\n' + textToCopy);
                 })
                 .catch(err => {
                     // 如果Clipboard API失败，使用备用方法
@@ -75,7 +75,7 @@
             textArea.select();
             try {
                 document.execCommand('copy');
-                alert('已复制到剪贴板！\n你可以粘贴到任何APP分享\n\n内容如下:\n' + text);
+                alert('已复制到剪贴板！\n你可以粘贴到其他APP分享\n内容如下:\n\n' + text);
             } catch (err) {
                 alert('复制失败，请手动复制:\n\n' + text);
             }
