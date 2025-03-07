@@ -55,6 +55,7 @@
         // 监听选择事件
         document.addEventListener('mouseup', showContextMenu); // 电脑端
         document.addEventListener('touchend', showContextMenu); // 移动端
+        document.addEventListener('contextmenu', (e) => e.preventDefault()); // 阻止默认右键菜单
 
         function showContextMenu(event) {
             // 获取选中的文本
