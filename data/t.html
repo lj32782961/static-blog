@@ -29,9 +29,15 @@
 
     <script>
         // 分享内容配置
-        const shareData = {
+        const shareData2 = {
             title:document.title || '网页标题', // 自动获取页面标题
             text: document.getElementById('summary')?.textContent || '默认摘要', // 获取特定元素内容
+            url: '链接： '+window.location.href // 当前页面URL
+        };
+
+        const shareData = {
+            title:document.title || '网页标题', // 自动获取页面标题
+            text:document.title+ document.getElementById('summary')?.textContent || '默认摘要', // 获取特定元素内容
             url: '链接： '+window.location.href // 当前页面URL
         };
 
@@ -40,7 +46,7 @@
                 // 首先尝试使用 Web Share API (适用于支持的移动设备和浏览器)
                 if (navigator.share) {
                     await navigator.share(shareData);
-                    console.log('分享成功');
+                    console.log('分享成功~');
                 } else {
                     // 如果不支持Web Share API，执行复制到剪贴板
                     copyToClipboard();
