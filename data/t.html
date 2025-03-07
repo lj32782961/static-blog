@@ -70,7 +70,7 @@
         function fallbackCopyText(text) {
             // 创建临时textarea用于复制
             const textArea = document.createElement('textarea');
-            textArea.value = text;
+            textArea.value = title + text + url;
             document.body.appendChild(textArea);
             textArea.select();
             try {
