@@ -38,7 +38,7 @@
         const shareData = {
             title:document.title || '网页标题', // 自动获取页面标题
             text:document.title+'\n'+ document.getElementById('summary')?.textContent || '默认摘要' +'链接： '+ '\n'+ window.location.href, // 获取特定元素内容
-            url: '链接： '+window.location.href // 当前页面URL
+            // url: '链接： '+window.location.href // 当前页面URL
         };
 
         async function shareContent() {
