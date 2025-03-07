@@ -9,6 +9,7 @@
     <title>云笔记</title>
     <meta name="description" content="云笔记，云端笔记，云端收藏，收藏，干货，技巧，记忆，记录，学习">
     <meta name="keywords" content="云笔记，云端笔记，云端收藏，收藏，干货，技巧，记忆，记录，学习">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
@@ -30,6 +31,7 @@
         <article class="content">
             <h1 style="text-align: center;">文章标题</h1>
             <p class="meta" class="meta" style="text-align: center; font-size: 18px;">发布日期: 2025-03-04 | 来源: 原创</p>
+            <p id="summary"></p>
             <section>
                 <p>这里是。。。</p>
                 <p><a href="https://" target="_blank" rel="noopener noreferrer">点击此处访问</a></p>
@@ -40,7 +42,10 @@
             </section>
         </article>
     </main>
-    
+
+    <div style="text-align: center;"> 
+        <i class="fas fa-share-square share-btn"  onclick="shareContent()">  分享</i>
+    </div>
     <div class="returnhome">
         <a href="../index.html">返回主页</a></li>
     </div>
@@ -49,5 +54,6 @@
     </footer>
 
     <script src="../js/script.js"></script>
+    <script src="../js/share.js"></script>
 </body>
 </html>
