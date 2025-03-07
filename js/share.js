@@ -1,7 +1,7 @@
 // 分享内容配置
 const shareData = {
     title:document.title || '网页标题', // 自动获取页面标题
-    text: document.getElementById('summary')?.textContent || '默认摘要', // 获取特定元素内容
+    text: document.getElementById('summary')?.textContent || ' ', // 获取特定元素内容
     url: '链接： ' + window.location.href // 当前页面URL
 };
 
