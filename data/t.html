@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分享功能示例999</title>
+    <style>
+        .share-btn {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .share-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>网页分享示例</h1>
+<p id="summary">这是一个示例摘要，可能是文章的简介或主要内容。</p>
+<div class="content">
+        <p>这里是正文内容的第一段。</p>
+        <p>这里是正文内容的第二段。</p>
+    </div>
+    <button class="share-btn" onclick="shareContent()">分享</button>
+
+    <script>
+        // 分享内容配置
+        const shareData = {
+            title:document.title || '网页标题', // 自动获取页面标题
+            text: document.getElementById('summary')?.textContent || '默认摘要', // 获取特定元素内容
+            url: window.location.href // 当前页面URL
+        };
+
+        async function shareContent() {
+            try {
+                // 首先尝试使用 Web Share API (适用于支持的移动设备和浏览器)
+                if (navigator.share) {
+                    await navigator.share(shareData);
+                    console.log('分享成功');
+                } else {
+                    // 如果不支持Web Share API，执行复制到剪贴板
+                    copyToClipboard();
+                }
+            } catch (error) {
+                // 如果分享失败，也执行复制到剪贴板
+                console.log('分享出错:', error);
+                copyToClipboard();
+            }
+        }
+
+        function copyToClipboard() {
+            // 组合分享内容
+            const textToCopy = `${shareData.title}\n${shareData.text}\n${shareData.url}`;
+            
+            // 使用 Clipboard API 复制到剪贴板
+            navigator.clipboard.writeText(textToCopy)
+                .then(() => {
+                    alert('已复制到剪贴板！\n你可以粘贴到任何APP分享\n\n内容如下:\n' + textToCopy);
+                })
+                .catch(err => {
+                    // 如果Clipboard API失败，使用备用方法
+                    fallbackCopyText(textToCopy);
+                });
+        }
+
+        function fallbackCopyText(text) {
+            // 创建临时textarea用于复制
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                alert('已复制到剪贴板！\n你可以粘贴到任何APP分享\n\n内容如下:\n' + text);
+            } catch (err) {
+                alert('复制失败，请手动复制:\n\n' + text);
+            }
+            document.body.removeChild(textArea);
+        }
+    </script>
+</body>
+</html>
