@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>文本选择弹窗改进版</title>
+    <title>文本选择弹窗</title>
     <style>
         #contextMenu {
             position: absolute;
@@ -13,7 +13,6 @@
             padding: 5px;
             z-index: 1000;
             display: none;
-            min-width: 100px;
         }
 
         #contextMenu div {
@@ -41,8 +40,11 @@
 <body>
     <p>这是一段测试文本，你可以选中任何文字试试效果。这是一段测试文本，你可以选中任何文字试试效果。</p>
 
-    <!-- 只保留空的容器，内容由 JS 动态生成 -->
-    <div id="contextMenu"></div>
+    <div id="contextMenu">
+        <!-- <div onclick="copyText()">复制</div>
+        <div onclick="translateText()">翻译</div> -->
+    </div>
+
     <div id="copyMessage">复制成功！</div>
 
     <script>
@@ -51,14 +53,15 @@
         const copyMessage = document.getElementById('copyMessage');
 
         // 监听选择事件
-        document.addEventListener('mouseup', handleSelection); // 电脑端
-        document.addEventListener('touchend', handleSelection); // 移动端
-        document.addEventListener('contextmenu', (e) => e.preventDefault()); // 阻止默认右键菜单
+        document.addEventListener('mouseup', showContextMenu); // 电脑端
+        document.addEventListener('touchend', showContextMenu); // 移动端
 
-        function handleSelection(event) {
+        function showContextMenu(event) {
+            // 获取选中的文本
             selectedText = window.getSelection().toString().trim();
             
             if (selectedText) {
+                // 获取选择区域的位置
                 const selection = window.getSelection();
                 const range = selection.getRangeAt(0);
                 const rect = range.getBoundingClientRect();
@@ -66,13 +69,13 @@
                 // 设置菜单位置
                 contextMenu.style.top = `${rect.bottom + window.scrollY}px`;
                 contextMenu.style.left = `${rect.left + window.scrollX}px`;
-                
-                // 动态生成菜单内容
+                contextMenu.style.display = 'block';
+
+                // 重置菜单内容
                 contextMenu.innerHTML = `
                     <div onclick="copyText()">复制</div>
                     <div onclick="translateText()">翻译</div>
                 `;
-                contextMenu.style.display = 'block';
             }
         }
 
@@ -83,10 +86,10 @@
             }
         });
 
-        // 复制功能
         function copyText() {
             navigator.clipboard.writeText(selectedText)
                 .then(() => {
+                    // 显示复制成功消息
                     copyMessage.style.display = 'block';
                     setTimeout(() => {
                         copyMessage.style.display = 'none';
@@ -98,35 +101,25 @@
                 });
         }
 
-        // 翻译功能（示例）
         function translateText() {
+            // 这里使用简单的示例翻译，实际应用中可以调用翻译API
             const translations = {
                 '测试': 'test',
                 '文字': 'text',
                 '效果': 'effect'
             };
+            
             const translated = translations[selectedText] || '翻译结果：' + selectedText.split('').reverse().join('');
             
-            // 更新弹窗内容为翻译结果和关闭按钮
             contextMenu.innerHTML = `
                 <div>${translated}</div>
-                <div onclick="closeMenu()" style="text-align: center; border-top: 1px solid #ccc; margin-top: 5px;">关闭</div>
+                <div onclick="closeMenu()" style="text-align: center;">关闭</div>
             `;
         }
 
-        // 关闭菜单
         function closeMenu() {
             contextMenu.style.display = 'none';
         }
-
-        // 阻止移动端长按默认行为
-        document.addEventListener('touchstart', (e) => {
-            let touchTimer;
-            touchTimer = setTimeout(() => {
-                e.preventDefault(); // 阻止默认长按菜单
-            }, 300); // 300ms 算长按
-            document.addEventListener('touchend', () => clearTimeout(touchTimer), { once: true });
-        });
     </script>
 </body>
 </html>
