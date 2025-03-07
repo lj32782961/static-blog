@@ -105,8 +105,8 @@
 
         function handleSelection(event) {
             selectedText = window.getSelection().toString().trim();
-            console.log(selectedText);
             if (selectedText) {
+                console.log(selectedText);
                 const selection = window.getSelection();
                 const range = selection.getRangeAt(0);
                 const rect = range.getBoundingClientRect();
@@ -135,49 +135,20 @@
             }
         });
 
-        // 复制功能（修复版）
+        // 复制功能
         function copyText(element) {
             const selectedText = element.dataset.selected;
-            // console.log(selectedText);
-            // 优先使用 Clipboard API
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(selectedText)
-                    .then(() => {
-                        showCopySuccess();
-                    })
-                    .catch(err => {
-                        console.error('Clipboard API 复制失败:', err);
-                        fallbackCopy(); // 使用备用方案
-                    });
-            } else {
-                // Clipboard API 不可用时使用备用方案
-                fallbackCopy();
-            }
-        }
-
-        // 备用复制方案
-        function fallbackCopy() {
-            const tempInput = document.createElement('textarea');
-            tempInput.value = selectedText;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            try {
-                document.execCommand('copy');
-                showCopySuccess();
-            } catch (err) {
-                console.error('备用复制失败:', err);
-                alert('复制失败，请手动复制');
-            }
-            document.body.removeChild(tempInput);
-        }
-
-        // 显示复制成功提示
-        function showCopySuccess() {
-            copyMessage.style.display = 'block';
-            setTimeout(() => {
-                copyMessage.style.display = 'none';
-            }, 2000);
-            contextMenu.style.display = 'none';
+            navigator.clipboard.writeText(selectedText)
+                .then(() => {
+                    copyMessage.style.display = 'block';
+                    setTimeout(() => {
+                        copyMessage.style.display = 'none';
+                    }, 2000);
+                    contextMenu.style.display = 'none';
+                })
+                .catch(err => {
+                    console.error('复制失败:', err);
+                });
         }
 
         // 翻译功能

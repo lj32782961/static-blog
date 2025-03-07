@@ -72,7 +72,7 @@
     </div>
 
     <script>
-        let selectedText = '';
+        let selectedText = ''; // 全局变量，仅作为参考
         const contextMenu = document.getElementById('contextMenu');
         const copyMessage = document.getElementById('copyMessage');
         const translatePopup = document.getElementById('translatePopup');
@@ -117,7 +117,7 @@
                 
                 // 动态生成菜单内容
                 contextMenu.innerHTML = `
-                    <div onclick="copyText(this)" data-selected="${selectedText}">复制</div>
+                    <div onclick="copyText()">复制</div>
                     <div onclick="translateText()">翻译</div>
                 `;
                 contextMenu.style.display = 'block';
@@ -136,36 +136,49 @@
         });
 
         // 复制功能（修复版）
-        function copyText(element) {
-            const selectedText = element.dataset.selected;
-            // console.log(selectedText);
+        function copyText() {
+            // 每次点击时重新获取选中文本，确保最新状态
+            const textToCopy = window.getSelection().toString().trim();
+            console.log('尝试复制的文本:', textToCopy); // 调试用
+
+            if (!textToCopy) {
+                console.error('没有选中文本');
+                alert('没有选中文本可复制');
+                contextMenu.style.display = 'none';
+                return;
+            }
+
             // 优先使用 Clipboard API
             if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(selectedText)
+                navigator.clipboard.writeText(textToCopy)
                     .then(() => {
                         showCopySuccess();
                     })
                     .catch(err => {
                         console.error('Clipboard API 复制失败:', err);
-                        fallbackCopy(); // 使用备用方案
+                        fallbackCopy(textToCopy);
                     });
             } else {
-                // Clipboard API 不可用时使用备用方案
-                fallbackCopy();
+                fallbackCopy(textToCopy);
             }
         }
 
         // 备用复制方案
-        function fallbackCopy() {
+        function fallbackCopy(text) {
             const tempInput = document.createElement('textarea');
-            tempInput.value = selectedText;
+            tempInput.value = text;
             document.body.appendChild(tempInput);
             tempInput.select();
             try {
-                document.execCommand('copy');
-                showCopySuccess();
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showCopySuccess();
+                } else {
+                    console.error('备用复制失败');
+                    alert('复制失败，请手动复制');
+                }
             } catch (err) {
-                console.error('备用复制失败:', err);
+                console.error('备用复制异常:', err);
                 alert('复制失败，请手动复制');
             }
             document.body.removeChild(tempInput);
@@ -182,12 +195,13 @@
 
         // 翻译功能
         function translateText() {
+            const textToTranslate = window.getSelection().toString().trim();
             const translations = {
                 '测试': 'test',
                 '文字': 'text',
                 '效果': 'effect'
             };
-            const translated = translations[selectedText] || '翻译结果：' + selectedText.split('').reverse().join('');
+            const translated = translations[textToTranslate] || '翻译结果：' + textToTranslate.split('').reverse().join('');
             
             // 关闭原始菜单
             contextMenu.style.display = 'none';
