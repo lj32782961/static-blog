@@ -107,6 +107,7 @@
             selectedText = window.getSelection().toString().trim();
             
             if (selectedText) {
+                console.log(selectedText);
                 const selection = window.getSelection();
                 const range = selection.getRangeAt(0);
                 const rect = range.getBoundingClientRect();
@@ -117,7 +118,7 @@
                 
                 // 动态生成菜单内容
                 contextMenu.innerHTML = `
-                    <div onclick="copyText()">复制</div>
+                    <div onclick="copyText(this)" data-selected="${selectedText}">复制</div>
                     <div onclick="translateText()">翻译</div>
                 `;
                 contextMenu.style.display = 'block';
@@ -136,7 +137,8 @@
         });
 
         // 复制功能
-        function copyText() {
+        function copyText(element) {
+            const selectedText = element.dataset.selected;
             navigator.clipboard.writeText(selectedText)
                 .then(() => {
                     copyMessage.style.display = 'block';
