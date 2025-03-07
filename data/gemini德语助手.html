@@ -10,6 +10,7 @@
     <meta name="description" content="云笔记，云端笔记，云端收藏，收藏，干货，技巧，记忆，记录，学习">
     <meta name="keywords" content="云笔记，云端笔记，云端收藏，收藏，干货，技巧，记忆，记录，学习，德语学习，德语故事，德语对话，词汇精讲">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
     <header>
@@ -30,6 +31,7 @@
         <article class="content">
             <h1 style="text-align: center;"><a href="https://de-assistant.vercel.app/" rel="noopener noreferrer">德语学习助手</a></h1>
             <p class="meta" class="meta" style="text-align: center; font-size: 18px;">发布日期: 2025-03-04 | 来源: 原创</p>
+            <p id="summary"></p>
             <section>
                 <p>适用于A1~B1阶段的初学者</p>
                 <p>你是否曾梦想流利地说德语，畅游德语世界？然而，现实却常常让你望而却步：德语语法复杂难懂，动词变位如同天书，长长的复合词让你头疼不已，背单词更是如同西西弗斯般永无止境的苦役。 你费尽心思背诵单词，却在实际运用中频频出错；你努力学习语法规则，却总感觉难以融会贯通。学习德语的道路，布满了荆棘，让你感到沮丧和无力。</p>
@@ -41,11 +43,15 @@
                     <img src="../assets/deyuxuexizhoushu.PNG" alt="示例图片" class="responsive-img" style="max-width: 100%;">
                 </a>
                 
-                <!-- <p style="font-weight: bold;">文件下载：</p> <a href="../assets/sample.pdf" target="_blank">sample.pdf</a> -->
-            </section>
+                <!-- <p style="font-weight: bold;">文件下载：</p> <a href="../assets/sample.pdf" target="_blank">sample.pdf</a> -->    
+            </section> 
         </article>
     </main>
-    
+
+    <div style="text-align: center;"> 
+        <i class="fas fa-share-square share-btn"  onclick="shareContent()"></i>
+    </div>
+   
     <div class="returnhome">
         <a href="../index.html">返回主页</a></li>
     </div>
@@ -54,5 +60,6 @@
     </footer>
 
     <script src="../js/script.js"></script>
+    <script src="../js/share.js"></script>
 </body>
 </html>
