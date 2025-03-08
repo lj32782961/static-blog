@@ -122,12 +122,13 @@
 
         // PC端事件
         document.addEventListener('mouseup', handleSelection);
+        document.addEventListener('touched', handleSelection);
         document.addEventListener('contextmenu', (e) => e.preventDefault());
 
         // 移动端事件
         // document.addEventListener('touchstart', startTouch);
         // document.addEventListener('touchend', endTouch);
-        document.addEventListener('touchend', handleMobileSelection); // 修改1：新增专门的移动端处理函数
+        // document.addEventListener('touchend', handleMobileSelection); // 修改1：新增专门的移动端处理函数
         // document.addEventListener('touchmove', () => {}); // 修改2：touchmove 暂时留空，避免干扰);
         document.addEventListener('contextmenu', (e) => e.preventDefault()); // 阻止默认长按菜单
 
@@ -290,7 +291,7 @@
             translatePopup.style.display = 'none';
         }
 
-        
+
         function handleMobileSelection0(event) {
         setTimeout(() => {
             const selection = window.getSelection();
