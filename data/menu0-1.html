@@ -125,15 +125,16 @@
 
         // 移动端事件
         // document.addEventListener('touchstart', startTouch);
-        document.addEventListener('touchend', endTouch);
+        // document.addEventListener('touchend', endTouch);
+        document.addEventListener('touchend', handleMobileSelection); // 修改1：新增专门的移动端处理函数
         document.addEventListener('touchmove', cancelTouch);
         document.addEventListener('contextmenu', (e) => e.preventDefault()); // 阻止默认长按菜单
 
-        function startTouch(event) {
-            touchTimer = setTimeout(() => {
-                handleSelection(event);
-            }, 500); // 长按500ms触发
-        }
+        // function startTouch(event) {
+        //     touchTimer = setTimeout(() => {
+        //         handleSelection(event);
+        //     }, 500); // 长按500ms触发
+        // }
 
         function endTouch(event) {
             clearTimeout(touchTimer);
@@ -218,6 +219,40 @@
             lastPosition = { x: anchorX, y: anchorY };
             translatePopup.style.display = 'none';
         }
+
+        function handleMobileSelection(event) {
+        setTimeout(() => {
+            const selection = window.getSelection();
+            const selectedText = selection.toString().trim();
+            if (!selectedText) {
+                contextMenu.style.display = 'none';
+                translatePopup.style.display = 'none';
+                return;
+            }
+
+            const range = selection.getRangeAt(0);
+            const rect = range.getBoundingClientRect();
+            const eventPos = getEventPosition(event);
+
+            let anchorX = eventPos.x;
+            let anchorY = eventPos.y;
+            if (rect.width === 0 && rect.height === 0) {
+                // 跨多行选择或选区不可见时，使用事件位置
+            } else {
+                anchorX = (rect.left + rect.right) / 2;
+                anchorY = rect.bottom;
+            }
+
+            contextMenu.innerHTML = `
+                <div class="menu-item" onclick="copyText(this)" data-selected="${selectedText}">复制</div>
+                <div class="menu-item" onclick="translateText(this)" data-selected="${selectedText}">翻译</div>
+                <div class="menu-divider"></div>
+            `;
+            smartPosition(contextMenu, anchorX, anchorY);
+            lastPosition = { x: anchorX, y: anchorY };
+            translatePopup.style.display = 'none';
+        }, 100); // 延迟 100ms 确保选区更新
+    }
 
         // // 事件监听
         // document.addEventListener('mouseup', handleSelection);
