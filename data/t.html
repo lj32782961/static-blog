@@ -243,43 +243,6 @@
             }
         });
 
-        // // 复制功能
-        // function copyText(element) {
-        //     const selectedText = element.dataset.selected;
-        //     if (navigator.clipboard && navigator.clipboard.writeText) {
-        //         navigator.clipboard.writeText(selectedText)
-        //             .then(() => {
-        //                 showCopySuccess();
-        //             })
-        //             .catch(err => {
-        //                 console.error('Clipboard API 复制失败:', err);
-        //                 fallbackCopy(selectedText);
-        //             });
-        //     } else {
-        //         fallbackCopy(selectedText);
-        //     }
-        // }
-
-        // function fallbackCopy(text) {
-        //     const tempInput = document.createElement('textarea');
-        //     tempInput.value = text;
-        //     document.body.appendChild(tempInput);
-        //     tempInput.select();
-        //     try {
-        //         const successful = document.execCommand('copy');
-        //         if (successful) {
-        //             showCopySuccess();
-        //         } else {
-        //             console.error('备用复制失败');
-        //             alert('复制失败，请手动复制');
-        //         }
-        //     } catch (err) {
-        //         console.error('备用复制异常:', err);
-        //         alert('复制失败，请手动复制');
-        //     }
-        //     document.body.removeChild(tempInput);
-        // }
-
         // 复制
         function copyText(element) {
             const selectedText = element.dataset.selected;
@@ -344,13 +307,14 @@
                 '文字': 'text',
                 '效果': 'effect'
             };
-            const translated = translations[selectedText] || '翻译结果：' + selectedText.split('').reverse().join('');
+            const translated = translations[selectedText] || '翻译结果：' + selectedText.split('').join('');
             
             // 关闭原始菜单
             contextMenu.style.display = 'none';
 
             translateTextarea.value = translated;
-            
+
+            //调整翻译弹窗的位置
             smartPosition(translatePopup, lastPosition.x, lastPosition.y);
         }
 
