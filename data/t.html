@@ -231,7 +231,7 @@
         });
 
         // 移动端阻止默认长按菜单
-        // document.addEventListener('contextmenu', (e) => e.preventDefault());
+        document.addEventListener('contextmenu', (e) => e.preventDefault());
 
         // 窗口大小变化时重新定位
         window.addEventListener('resize', () => {
