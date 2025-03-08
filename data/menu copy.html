@@ -187,46 +187,46 @@
         }
 
         function getEventPosition(event) {
-            if ('changedTouches' in event) {
-                // const touch = event.changedTouches[0] || event.touches[0];
+            if (event.type === 'touchend' || event.type === 'touchstart') {
+                const touch = event.changedTouches[0] || event.touches[0];
                 return { x: touch.clientX, y: touch.clientY };
             }
             return { x: event.clientX, y: event.clientY };
         }
 
-        //  处理选择事件的函数，用于PC和移动端
         function handleSelection(event) {
-            requestAnimationFrame(() => { // 使用requestAnimationFrame确保选区已更新
-                const selection = window.getSelection();
-                selectedText = selection.toString().trim();
-                if (!selectedText) {
-                    contextMenu.style.display = 'none';
-                    translatePopup.style.display = 'none';
-                    return;
-                }
-
-                const range = selection.getRangeAt(0);
-                const rect = range.getBoundingClientRect();
-                const eventPos = getEventPosition(event);
-
-                let anchorX = eventPos.x;
-                let anchorY = eventPos.y;
-                if (rect.width === 0 && rect.height === 0) {
-                    // 跨多行选择或选区不可见时，使用事件位置
-                } else {
-                    anchorX = (rect.left + rect.right) / 2; // 选区水平中心
-                    anchorY = rect.bottom; // 选区底部
-                }
-
-                contextMenu.innerHTML = `
-                    <div class="menu-item" onclick="copyText(this)" data-selected="${selectedText}">复制</div>
-                    <div class="menu-item" onclick="translateText(this)" data-selected="${selectedText}">翻译</div>
-                    <div class="menu-divider"></div>
-                `;
-                smartPosition(contextMenu, anchorX, anchorY);
-                lastPosition = { x: anchorX, y: anchorY };
+            const selection = window.getSelection();
+            const selectedText = selection.toString().trim();
+            if (!selectedText) {
+                contextMenu.style.display = 'none';
                 translatePopup.style.display = 'none';
-            });
+                return;
+            }
+
+            const range = selection.getRangeAt(0);
+            const rect = range.getBoundingClientRect();
+            const eventPos = getEventPosition(event);
+
+            // 综合定位点：优先使用事件位置，异常时回退到选区中心
+            let anchorX = eventPos.x;
+            let anchorY = eventPos.y;
+            if (rect.width === 0 && rect.height === 0) {
+                // 跨多行选择或选区不可见时，使用事件位置
+            } else {
+                anchorX = (rect.left + rect.right) / 2; // 选区水平中心
+                anchorY = rect.bottom; // 选区底部
+            }
+
+            // 生成菜单内容
+            contextMenu.innerHTML = `
+                <div class="menu-item" onclick="copyText(this)" data-selected="${selectedText}">复制</div>
+                <div class="menu-item" onclick="translateText(this)" data-selected="${selectedText}">翻译</div>
+                <div class="menu-divider"></div>
+                
+            `;
+            smartPosition(contextMenu, anchorX, anchorY);
+            lastPosition = { x: anchorX, y: anchorY };
+            translatePopup.style.display = 'none';
         }
 
         // 事件监听
