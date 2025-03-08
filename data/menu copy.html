@@ -135,20 +135,20 @@
             }, 500); // 长按500ms触发
         }
 
-        // function endTouch(event) {
-        //     clearTimeout(touchTimer);
-        //     handleSelection(event);
-        //     // // 延迟检查选择状态，确保跨行选择生效
-        //     // setTimeout(() => {
-        //     //     handleSelection(event);
-        //     // }, 500); // 500ms 延迟
-        // }
         function endTouch(event) {
-    clearTimeout(touchTimer);
-    requestAnimationFrame(() => {
-        handleSelection(event);
-    });
-}
+            clearTimeout(touchTimer);
+            // handleSelection(event);
+            // 延迟检查选择状态，确保跨行选择生效
+            setTimeout(() => {
+                handleSelection(event);
+            }, 500); // 500ms 延迟
+        }
+//         function endTouch(event) {
+//     clearTimeout(touchTimer);
+//     requestAnimationFrame(() => {
+//         handleSelection(event);
+//     });
+// }
 
         function cancelTouch() {
             clearTimeout(touchTimer);
