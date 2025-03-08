@@ -138,7 +138,10 @@
 
         function endTouch(event) {
             clearTimeout(touchTimer);
-            handleSelection(event);
+            // handleSelection(event);
+            touchTimer = setTimeout(() => {
+                handleSelection(event);
+            }, 500); // 长按500ms触发
         }
 
         function cancelTouch() {
