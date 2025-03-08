@@ -137,10 +137,11 @@
 
         function endTouch(event) {
             clearTimeout(touchTimer);
-            // 延迟检查选择状态，确保跨行选择生效
-            setTimeout(() => {
-                handleSelection(event);
-            }, 500); // 500ms 延迟
+            handleSelection(event);
+            // // 延迟检查选择状态，确保跨行选择生效
+            // setTimeout(() => {
+            //     handleSelection(event);
+            // }, 500); // 500ms 延迟
         }
     
 
