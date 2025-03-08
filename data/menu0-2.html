@@ -117,7 +117,6 @@
         const translatePopup = document.getElementById('translatePopup');
         const translateTextarea = translatePopup.querySelector('textarea');
         let lastPosition = { x: 0, y: 0 };
-        let touchStartPos = null;
         let touchTimer;
 
         // PC端事件
@@ -125,21 +124,21 @@
         document.addEventListener('contextmenu', (e) => e.preventDefault());
 
         // 移动端事件
-        document.addEventListener('touchstart', startTouch);
-        document.addEventListener('touchend', endTouch);
-        // document.addEventListener('touchend', handleMobileSelection); // 修改1：新增专门的移动端处理函数
-        document.addEventListener('touchmove', () => {}); // 修改2：touchmove 暂时留空，避免干扰);
-        document.addEventListener('contextmenu', (e) => e.preventDefault()); // 阻止默认长按菜单
+        // document.addEventListener('touchend', endTouch);
+        document.addEventListener('touchend', handleMobileSelection); // 修改1：新增专门的移动端处理函数
+        // document.addEventListener('touchmove', () => {}); // 修改2：touchmove 暂时留空，避免干扰);
+        // document.addEventListener('contextmenu', (e) => e.preventDefault()); // 阻止默认长按菜单
 
         // function startTouch(event) {
         //     touchTimer = setTimeout(() => {
         //         handleSelection(event);
         //     }, 2000); // 长按500ms触发
         // }
-        function startTouch(event) {
-            const touch = event.touches[0];
-            touchStartPos = { x: touch.clientX, y: touch.clientY };
-        }
+
+        // function startTouch(event) {
+        //     const touch = event.touches[0];
+        //     touchStartPos = { x: touch.clientX, y: touch.clientY };
+        // }
 
         // function endTouch(event) {
         //     clearTimeout(touchTimer); // 清除 touchstart 的计时器
@@ -147,38 +146,38 @@
         //         handleSelection(event);
         //     }, 2000); // 延时 200ms 获取松手时的选区
         // }
-        function endTouch(event) {
-        if (!touchStartPos) return; // 如果没有起点，退出
+    //     function endTouch(event) {
+    //     if (!touchStartPos) return; // 如果没有起点，退出
 
-        const touch = event.changedTouches[0];
-        const touchEndPos = { x: touch.clientX, y: touch.clientY };
+    //     const touch = event.changedTouches[0];
+    //     const touchEndPos = { x: touch.clientX, y: touch.clientY };
 
-        // 设置选区
-        const selection = window.getSelection();
-        selection.removeAllRanges();
+    //     // 设置选区
+    //     const selection = window.getSelection();
+    //     selection.removeAllRanges();
 
-        const startRange = document.caretRangeFromPoint(touchStartPos.x, touchStartPos.y);
-        const endRange = document.caretRangeFromPoint(touchEndPos.x, touchEndPos.y);
+    //     const startRange = document.caretRangeFromPoint(touchStartPos.x, touchStartPos.y);
+    //     const endRange = document.caretRangeFromPoint(touchEndPos.x, touchEndPos.y);
 
-        if (startRange && endRange) {
-            const range = document.createRange();
-            range.setStart(startRange.startContainer, startRange.startOffset);
-            range.setEnd(endRange.endContainer, endRange.endOffset);
-            selection.addRange(range);
-        }
+    //     if (startRange && endRange) {
+    //         const range = document.createRange();
+    //         range.setStart(startRange.startContainer, startRange.startOffset);
+    //         range.setEnd(endRange.endContainer, endRange.endOffset);
+    //         selection.addRange(range);
+    //     }
 
-        // 延时 500ms 显示菜单
-        setTimeout(() => {
-            handleSelection(event);
-        }, 500);
+    //     // 延时 500ms 显示菜单
+    //     setTimeout(() => {
+    //         handleSelection(event);
+    //     }, 500);
 
-        // 重置起点
-        touchStartPos = null;
-    }
+    //     // 重置起点
+    //     touchStartPos = null;
+    // }
 
-        function cancelTouch() {
-            // clearTimeout(touchTimer);
-        }
+    //     function cancelTouch() {
+    //         // clearTimeout(touchTimer);
+    //     }
 
         // 智能定位函数
         function smartPosition(element, anchorX, anchorY) {
