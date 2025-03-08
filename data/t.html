@@ -121,6 +121,7 @@
 
         // PC端事件
         document.addEventListener('mouseup', handleSelection);
+        // 移动端阻止默认长按菜单
         document.addEventListener('contextmenu', (e) => e.preventDefault());
 
         // 移动端事件
@@ -213,8 +214,10 @@
                 <div class="menu-divider"></div>
                 
             `;
+            //调整菜单位置
             smartPosition(contextMenu, anchorX, anchorY);
             lastPosition = { x: anchorX, y: anchorY };
+
             translatePopup.style.display = 'none';
         }
 
@@ -230,9 +233,6 @@
             }
         });
 
-        // 移动端阻止默认长按菜单
-        // document.addEventListener('contextmenu', (e) => e.preventDefault());
-
         // 窗口大小变化时重新定位
         window.addEventListener('resize', () => {
             if (contextMenu.style.display === 'block') {
@@ -243,42 +243,6 @@
             }
         });
 
-        // // 复制功能
-        // function copyText(element) {
-        //     const selectedText = element.dataset.selected;
-        //     if (navigator.clipboard && navigator.clipboard.writeText) {
-        //         navigator.clipboard.writeText(selectedText)
-        //             .then(() => {
-        //                 showCopySuccess();
-        //             })
-        //             .catch(err => {
-        //                 console.error('Clipboard API 复制失败:', err);
-        //                 fallbackCopy(selectedText);
-        //             });
-        //     } else {
-        //         fallbackCopy(selectedText);
-        //     }
-        // }
-
-        // function fallbackCopy(text) {
-        //     const tempInput = document.createElement('textarea');
-        //     tempInput.value = text;
-        //     document.body.appendChild(tempInput);
-        //     tempInput.select();
-        //     try {
-        //         const successful = document.execCommand('copy');
-        //         if (successful) {
-        //             showCopySuccess();
-        //         } else {
-        //             console.error('备用复制失败');
-        //             alert('复制失败，请手动复制');
-        //         }
-        //     } catch (err) {
-        //         console.error('备用复制异常:', err);
-        //         alert('复制失败，请手动复制');
-        //     }
-        //     document.body.removeChild(tempInput);
-        // }
 
         // 复制
         function copyText(element) {
@@ -327,7 +291,7 @@
             document.body.removeChild(tempInput);
         }
 
- 
+         // 显示复制成功提示
         function showCopySuccess() {
             copyMessage.style.display = 'block';
             setTimeout(() => {
@@ -344,7 +308,7 @@
                 '文字': 'text',
                 '效果': 'effect'
             };
-            const translated = translations[selectedText] || '翻译结果：' + selectedText.split('').reverse().join('');
+            const translated = translations[selectedText] || '翻译结果：' + selectedText.split('')join('');
             
             // 关闭原始菜单
             contextMenu.style.display = 'none';
