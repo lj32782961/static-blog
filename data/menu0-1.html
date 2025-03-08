@@ -140,11 +140,11 @@
             clearTimeout(touchTimer); // 清除 touchstart 的计时器
             setTimeout(() => {
                 handleSelection(event);
-            }, 200); // 延时 200ms 获取松手时的选区
+            }, 2000); // 延时 200ms 获取松手时的选区
         }
 
         function cancelTouch() {
-            clearTimeout(touchTimer);
+            // clearTimeout(touchTimer);
         }
 
         // 智能定位函数
