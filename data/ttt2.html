@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自定义选择菜单</title>
+    <style>
+        /* 自定义菜单样式 */
+        #contextMenu {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            padding: 8px 0;
+            z-index: 1000;
+        }
+
+        .menu-item {
+            padding: 8px 16px;
+            font-size: 14px;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .menu-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .menu-divider {
+            border-top: 1px solid #eee;
+            margin: 4px 0;
+        }
+
+        /* 复制成功提示 */
+        #copyMessage {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 14px;
+            z-index: 1000;
+        }
+
+        /* 翻译弹窗样式 */
+        #translatePopup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            z-index: 1000;
+        }
+
+        #translatePopup textarea {
+            width: 300px;
+            height: 100px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        #translatePopup button {
+            padding: 8px 16px;
+            font-size: 14px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #translatePopup button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <article>
+        <h2>请选择任意文本测试</h2>
+        <p>这是一个支持跨设备的选择菜单示例。尝试选择不同位置的文本，菜单会自动调整位置避免超出屏幕边界，并始终靠近您的操作位置。</p>
+        <p>长文本测试：Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    </article>
+
+    <!-- 自定义菜单 -->
+    <div id="contextMenu"></div>
+
+    <!-- 复制成功提示 -->
+    <div id="copyMessage">复制成功！</div>
+
+    <!-- 翻译弹窗 -->
+    <div id="translatePopup">
+        <textarea readonly></textarea>
+        <button onclick="closeTranslatePopup()">关闭</button>
+    </div>
+
+    <script>
+        const contextMenu = document.getElementById('contextMenu');
+        const copyMessage = document.getElementById('copyMessage');
+        const translatePopup = document.getElementById('translatePopup');
+
+        // 监听 touchend 事件
+        document.addEventListener('touchend', function (event) {
+            const selection = window.getSelection();
+            const selectedText = selection.toString().trim();
+
+            if (selectedText.length > 0) {
+                // 阻止默认菜单
+                event.preventDefault();
+
+                // 获取选中文本的位置
+                const range = selection.getRangeAt(0);
+                const rect = range.getBoundingClientRect();
+
+                // 显示自定义菜单
+                showContextMenu(rect, selectedText);
+            }
+        });
+
+        // 显示自定义菜单
+        function showContextMenu(rect, selectedText) {
+            // 生成菜单内容
+            contextMenu.innerHTML = `
+                <div class="menu-item" onclick="copyText('${selectedText}')">复制</div>
+                <div class="menu-item" onclick="translateText('${selectedText}')">翻译</div>
+                <div class="menu-divider"></div>
+            `;
+
+            // 设置菜单位置
+            const menuWidth = contextMenu.offsetWidth;
+            const menuHeight = contextMenu.offsetHeight;
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+
+            let left = rect.left + window.scrollX;
+            let top = rect.bottom + window.scrollY;
+
+            // 避免菜单超出屏幕
+            if (left + menuWidth > screenWidth) {
+                left = screenWidth - menuWidth;
+            }
+            if (top + menuHeight > screenHeight) {
+                top = rect.top + window.scrollY - menuHeight;
+            }
+
+            contextMenu.style.left = `${left}px`;
+            contextMenu.style.top = `${top}px`;
+            contextMenu.style.display = 'block';
+        }
+
+        // 复制文本
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showCopyMessage();
+            }).catch((err) => {
+                console.error('复制失败:', err);
+            });
+        }
+
+        // 显示复制成功提示
+        function showCopyMessage() {
+            copyMessage.style.display = 'block';
+            setTimeout(() => {
+                copyMessage.style.display = 'none';
+            }, 2000);
+        }
+
+        // 翻译文本
+        function translateText(text) {
+            const translateTextarea = translatePopup.querySelector('textarea');
+            translateTextarea.value = `翻译结果：${text}`; // 这里可以调用翻译 API
+            translatePopup.style.display = 'block';
+        }
+
+        // 关闭翻译弹窗
+        function closeTranslatePopup() {
+            translatePopup.style.display = 'none';
+        }
+
+        // 点击其他地方隐藏菜单
+        document.addEventListener('touchstart', function (event) {
+            if (!contextMenu.contains(event.target)) {
+                contextMenu.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
