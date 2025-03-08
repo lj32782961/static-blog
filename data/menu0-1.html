@@ -124,17 +124,17 @@
         document.addEventListener('contextmenu', (e) => e.preventDefault());
 
         // 移动端事件
-        // document.addEventListener('touchstart', startTouch);
-        // document.addEventListener('touchend', endTouch);
-        document.addEventListener('touchend', handleMobileSelection); // 修改1：新增专门的移动端处理函数
+        document.addEventListener('touchstart', startTouch);
+        document.addEventListener('touchend', endTouch);
+        // document.addEventListener('touchend', handleMobileSelection); // 修改1：新增专门的移动端处理函数
         document.addEventListener('touchmove', cancelTouch);
         document.addEventListener('contextmenu', (e) => e.preventDefault()); // 阻止默认长按菜单
 
-        // function startTouch(event) {
-        //     touchTimer = setTimeout(() => {
-        //         handleSelection(event);
-        //     }, 500); // 长按500ms触发
-        // }
+        function startTouch(event) {
+            touchTimer = setTimeout(() => {
+                // handleSelection(event);
+            }, 500); // 长按500ms触发
+        }
 
         function endTouch(event) {
             clearTimeout(touchTimer);
