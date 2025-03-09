@@ -9,8 +9,10 @@
     <title>云笔记</title>
     <meta name="description" content="云笔记，云端笔记，云端收藏，收藏，干货，技巧，记忆，记录，学习">
     <meta name="keywords" content="云笔记，云端笔记，云端收藏，收藏，干货，技巧，记忆，记录，学习">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
 </head>
 <body>
     <header>
@@ -49,11 +51,20 @@
     <div class="returnhome">
         <a href="../index.html">返回主页</a></li>
     </div>
+
+    <div id="contextMenu"></div>
+    <div id="copyMessage">复制成功！</div>
+    <div id="translatePopup">
+        <textarea readonly></textarea>
+        <button onclick="closeTranslatePopup()">关闭</button>
+    </div>
+
     <footer>
         <p>&copy; 2025 yunbiji云笔记. All Rights Reserved.</p>
     </footer>
 
     <script src="../js/script.js"></script>
     <script src="../js/share.js"></script>
+
 </body>
 </html>

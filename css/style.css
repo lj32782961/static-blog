@@ -299,6 +299,115 @@ footer {
     z-index: 1000;
 }
 
+
+#contextMenu {
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    padding: 5px;
+    z-index: 1000;
+    display: none;
+    min-width: 100px;
+    white-space: nowrap; /* 确保菜单项水平排列 */
+}
+
+#contextMenu:before {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: white;
+    transform: rotate(45deg);
+    top: -6px;
+    left: 20px;
+    box-shadow: -2px -2px 5px rgba(0, 0, 0, 0.05);
+}
+
+#contextMenu.upward:before {
+    top: auto;
+    bottom: -6px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+#translatePopup {
+    position: fixed;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    z-index: 1001;
+    display: none;
+    font-family: Arial, sans-serif;
+}
+
+#translatePopup textarea {
+    width: 200px;
+    height: 100px;
+    resize: none;
+    margin-bottom: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+}
+
+#translatePopup button {
+    display: block;
+    margin: 0 auto;
+    padding: 5px 10px;
+    background: #f5f5f5;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#copyMessage {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    display: none;
+    z-index: 1002;
+}
+
+.menu-item {
+    padding: 8px 16px;
+    cursor: pointer;
+    color: #333;
+    transition: background 0.2s;
+    display: inline-block; /* 水平排列菜单项 */
+}
+
+.menu-item:hover {
+    background: #f5f5f5;
+}
+
+.menu-item:active {
+    background: #05b655 !important; /* 点击时的背景色 */
+    transition: background 0s; /* 立即变色 */
+}
+
+/* 可选：添加动画效果 */
+@keyframes clickFeedback {
+    0% { background: #cf1f1f; }
+    100% { background: transparent; }
+}
+
+.menu-item.clicked {
+    animation: clickFeedback 0.3s ease;
+}
+
+.menu-divider {
+    display: inline-block;
+    margin: 0 5px;
+    color: #ccc;
+}
+
+
 /* 响应式设计 */
 @media (max-width: 768px) {
     .nav-list {
