@@ -190,13 +190,13 @@
             element.style.display = 'block';
             const menuRect = element.getBoundingClientRect();
 
-            let top = anchorY - menuRect.height - 10; // 默认在上方
+            let top = anchorY - menuRect.height - 30; // 默认在上方
             let direction = 'up';
-            if (top < 10 || anchorY > window.innerHeight / 2) { // 如果上方空间不足或选区在下半屏，显示在下方
-                top = anchorY + 10;
+            if (top < 30 || anchorY > window.innerHeight / 2) { // 如果上方空间不足或选区在下半屏，显示在下方
+                top = anchorY + 30;
                 direction = 'down';
             }
-            top = Math.max(10, Math.min(top, viewport.height - menuRect.height - 10)); // 限制在视口内
+            top = Math.max(30, Math.min(top, viewport.height - menuRect.height - 30)); // 限制在视口内
 
             let left = anchorX - menuRect.width / 2;
             left = Math.max(10, Math.min(left, viewport.width - menuRect.width - 10));
