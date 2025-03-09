@@ -13,8 +13,9 @@
             padding: 5px;
             z-index: 1000;
             display: none;
-            min-width: 100px;
+            min-width: 120px;
             white-space: nowrap; /* 确保菜单项水平排列 */
+            border-radius: 4px;
         }
 
         #contextMenu:before {
@@ -27,6 +28,7 @@
             top: -6px;
             left: 20px;
             box-shadow: -2px -2px 5px rgba(0, 0, 0, 0.05);
+            z-index: -1;
         }
 
         #contextMenu.upward:before {
@@ -54,6 +56,7 @@
             border: 1px solid #ddd;
             border-radius: 4px;
             padding: 5px;
+            font-family: inherit;
         }
 
         #translatePopup button {
@@ -85,8 +88,12 @@
             color: #333;
             transition: background 0.2s;
             display: inline-block; /* 水平排列菜单项 */
+            position: relative;
         }
 
+        .menu-item.active {
+            background-color: #e0e0e0; /* 点击后的背景颜色 */
+        }
         .menu-item:hover {
             background: #f5f5f5;
         }
@@ -211,6 +218,7 @@
             // 生成菜单内容
             contextMenu.innerHTML = `
                 <div class="menu-item" onclick="copyText(this)" data-selected="${selectedText}">复制</div>
+                <div class="menu-divider"></div>  <!-- 添加分隔符 -->
                 <div class="menu-item" onclick="translateText(this)" data-selected="${selectedText}">翻译</div>
             `;
             smartPosition(contextMenu, anchorX, anchorY);
@@ -240,6 +248,10 @@
         function copyText(element) {
             const selectedText = element.dataset.selected;
             console.log('尝试复制的文本:', selectedText); // 调试用
+            // 添加背景颜色修改
+            const menuItems = contextMenu.querySelectorAll('.menu-item');
+            menuItems.forEach(item => item.classList.remove('active'));
+            element.classList.add('active');
 
             if (!selectedText) {
                 console.error('没有选中文本');
