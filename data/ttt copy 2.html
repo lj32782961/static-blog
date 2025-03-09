@@ -32,60 +32,45 @@
 
     <script>
         document.addEventListener('contextmenu', (e) => e.preventDefault());
-        document.addEventListener('touchstart', handleSelectionStart);
-document.addEventListener('touchmove', handleSelectionUpdate);
-document.addEventListener('touchend', handleSelectionEnd);
+        document.addEventListener('touchend', handleSelection);
 
-let isSelecting = false; // 标记用户是否正在选择文本
-
-function handleSelectionStart(event) {
-    isSelecting = true;
-    showCustomMenu(event);
-}
-
-function handleSelectionUpdate(event) {
-    if (isSelecting) {
-        showCustomMenu(event);
-    }
-}
-
-function handleSelectionEnd(event) {
-    isSelecting = false;
+function handleSelection(event) {
     let selection = window.getSelection();
     let selectedText = selection.toString().trim();
 
     if (selectedText.length > 0) {
-        // 复制按钮的逻辑
-        document.getElementById('copy-button').onclick = function () {
-            navigator.clipboard.writeText(selectedText).then(function () {
-                alert('Text copied to clipboard');
-                hideCustomMenu();
-            }).catch(function (err) {
-                console.error('Failed to copy text: ', err);
-            });
-        };
-    } else {
-        hideCustomMenu(); // 如果没有选中文本，隐藏按钮
-    }
-}
+        // Prevent the default context menu
+        // event.preventDefault();
 
-function showCustomMenu(event) {
-    let selection = window.getSelection();
-    if (selection.toString().trim().length > 0) {
+        // Get the position of the selected text
         let range = selection.getRangeAt(0);
         let rect = range.getBoundingClientRect();
 
+        // Show the custom menu at the selection position
         let customMenu = document.getElementById('custom-menu');
         customMenu.style.display = 'block';
         customMenu.style.top = `${rect.bottom + window.scrollY}px`;
         customMenu.style.left = `${rect.left + window.scrollX}px`;
+
+        // Copy the selected text when the copy button is clicked
+        document.getElementById('copy-button').onclick = function() {
+            navigator.clipboard.writeText(selectedText).then(function() {
+                alert('Text copied to clipboard');
+                customMenu.style.display = 'none';
+            }).catch(function(err) {
+                console.error('Failed to copy text: ', err);
+            });
+        };
     }
 }
 
-function hideCustomMenu() {
-    let customMenu = document.getElementById('custom-menu');
-    customMenu.style.display = 'none';
-}
+        // Hide the custom menu when clicking outside
+        document.addEventListener('touchstart', function(event) {
+            let customMenu = document.getElementById('custom-menu');
+            if (customMenu.style.display === 'block' && !customMenu.contains(event.target)) {
+                customMenu.style.display = 'none';
+            }
+        });
     </script>
 </body>
 </html>
