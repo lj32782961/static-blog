@@ -125,11 +125,14 @@
         document.addEventListener('touchend', function(event) {
             let selection = window.getSelection();
             let selectedText = selection.toString().trim();
+            
+            if (!selectedText) {
+                contextMenu.style.display = 'none';
+                translatePopup.style.display = 'none';
+                return;
+            }
 
-            if (selectedText.length > 0) {
-//                 // Prevent the default context menu
-//                 // event.preventDefault();
-
+            
 //                 // Get the position of the selected text
                 let range = selection.getRangeAt(0);
                 let rect = range.getBoundingClientRect();
@@ -153,12 +156,12 @@
                     <div class="menu-item" id= "copy-button" onclick="translateText(this)" data-selected="${selectedText}">翻译</div>
                     <div class="menu-divider"></div>
                 `;
-                customMenu.style.display = 'block';
+                // customMenu.style.display = 'block';
 
                 smartPosition(contextMenu, anchorX, anchorY);
                 lastPosition = { x: anchorX, y: anchorY };
                 translatePopup.style.display = 'none';
-            }
+            
             });
 
             document.addEventListener('touchstart', function(event) {
