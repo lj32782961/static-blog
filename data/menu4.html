@@ -91,10 +91,14 @@
             background: #f5f5f5;
         }
 
+        .menu-item.active {
+            background: #cf1f1f !important; /* 点击时的背景色 */
+        }
+
         .menu-divider {
-            height: 1px;
-            background: #eee;
-            margin: 4px 0;
+            display: inline-block;
+            margin: 0 5px;
+            color: #ccc;
         }
     </style>
 </head>
@@ -211,6 +215,7 @@
             // 生成菜单内容
             contextMenu.innerHTML = `
                 <div class="menu-item" onclick="copyText(this)" data-selected="${selectedText}">复制</div>
+                <div class="menu-divider">|</div>
                 <div class="menu-item" onclick="translateText(this)" data-selected="${selectedText}">翻译</div>
             `;
             smartPosition(contextMenu, anchorX, anchorY);
@@ -240,6 +245,12 @@
         function copyText(element) {
             const selectedText = element.dataset.selected;
             console.log('尝试复制的文本:', selectedText); // 调试用
+            
+            // 添加点击反馈
+            element.classList.add('active');
+            setTimeout(() => {
+                element.classList.remove('active');
+            }, 1000);
 
             if (!selectedText) {
                 console.error('没有选中文本');
@@ -260,6 +271,7 @@
                 // Clipboard API 不可用时使用备用方案
                 fallbackCopy(selectedText);
             }
+            
         }
 
         // 备用复制方案
@@ -308,6 +320,12 @@
 
             //调整翻译弹窗的位置
             smartPosition(translatePopup, lastPosition.x, lastPosition.y);
+
+            // 添加点击反馈
+            element.classList.add('active');
+            setTimeout(() => {
+                element.classList.remove('active');
+            }, 1000);
         }
 
         // 关闭翻译弹窗
