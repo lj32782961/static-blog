@@ -92,7 +92,8 @@
         }
 
         .menu-item.active {
-            background: #e0e0e0; /* 点击时的背景色 */
+            background: #e0e0e0; /*点击时的背景色*/
+            /* background: #3e6960; */
         }
 
         .menu-divider {
@@ -160,13 +161,13 @@
             const menuRect = element.getBoundingClientRect();
 
             // 垂直方向调整
-            let top = anchorY - menuRect.height - 10; // 默认在内容上方
+            let top = anchorY - menuRect.height - 30; // 默认在内容上方
             let direction = 'up';
-            if (top < 10) { // 如果上方空间不足，显示在下方
-                top = anchorY + 10;
+            if (top < 30) { // 如果上方空间不足，显示在下方
+                top = anchorY + 30;
                 direction = 'down';
             }
-            top = Math.max(10, top); // 最小上边距
+            top = Math.max(30, top); // 最小上边距
 
             // 水平方向调整（居中对齐）
             let left = anchorX - menuRect.width / 2; // 居中于锚点
@@ -207,6 +208,8 @@
             let anchorY = eventPos.y;
             if (rect.width === 0 && rect.height === 0) {
                 // 跨多行选择或选区不可见时，使用事件位置
+                anchorX = eventPos.x;
+                anchorY = eventPos.y;
             } else {
                 anchorX = (rect.left + rect.right) / 2; // 选区水平中心
                 anchorY = rect.bottom; // 选区底部
