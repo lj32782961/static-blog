@@ -160,6 +160,26 @@
             clearTimeout(touchTimer);
         }
 
+        document.addEventListener('selectionchange', () => {
+            const selection = window.getSelection();
+            const selectedText = selection.toString().trim();
+            if (!selectedText || contextMenu.style.display !== 'block') return;
+
+            // 更新菜单内容和位置
+            const range = selection.getRangeAt(0);
+            const rect = range.getBoundingClientRect();
+            const anchorX = (rect.left + rect.right) / 2; // 选区水平中心
+            const anchorY = rect.top < window.innerHeight / 2 ? rect.bottom : rect.top; // 根据选区位置选择顶部或底部
+            lastPosition = { x: anchorX, y: anchorY };
+
+            contextMenu.innerHTML = `
+                <div class="menu-item" onclick="copyText(this)" data-selected="${selectedText}">复制</div>
+                <div class="menu-divider">|</div>
+                <div class="menu-item" onclick="translateText(this)" data-selected="${selectedText}">翻译</div>
+            `;
+            smartPosition(contextMenu, anchorX, anchorY);
+        });
+
         // 智能定位函数
         function smartPosition(element, anchorX, anchorY) {
             const viewport = {
@@ -167,26 +187,20 @@
                 height: window.innerHeight
             };
 
-            element.style.display = 'block'; // 先显示以获取尺寸
+            element.style.display = 'block';
             const menuRect = element.getBoundingClientRect();
 
-            // 垂直方向调整
-            let top = anchorY - menuRect.height - 10; // 默认在内容上方
+            let top = anchorY - menuRect.height - 10; // 默认在上方
             let direction = 'up';
-            if (top < 10) { // 如果上方空间不足，显示在下方
+            if (top < 10 || anchorY > window.innerHeight / 2) { // 如果上方空间不足或选区在下半屏，显示在下方
                 top = anchorY + 10;
                 direction = 'down';
             }
-            top = Math.max(10, top); // 最小上边距
+            top = Math.max(10, Math.min(top, viewport.height - menuRect.height - 10)); // 限制在视口内
 
-            // 水平方向调整（居中对齐）
-            let left = anchorX - menuRect.width / 2; // 居中于锚点
-            if (left + menuRect.width > viewport.width) {
-                left = viewport.width - menuRect.width - 10; // 靠右对齐
-            }
-            left = Math.max(10, left); // 最小左边距
+            let left = anchorX - menuRect.width / 2;
+            left = Math.max(10, Math.min(left, viewport.width - menuRect.width - 10));
 
-            // 应用定位
             element.style.top = `${top + window.scrollY}px`;
             element.style.left = `${left + window.scrollX}px`;
             element.className = direction === 'up' ? 'upward' : '';
@@ -202,7 +216,7 @@
 
         function handleSelection(event) {
             const selection = window.getSelection();
-            const selectedText = selection.toString().trim();
+            selectedText = selection.toString().trim();
             if (!selectedText) {
                 contextMenu.style.display = 'none';
                 translatePopup.style.display = 'none';
@@ -213,17 +227,15 @@
             const rect = range.getBoundingClientRect();
             const eventPos = getEventPosition(event);
 
-            // 综合定位点：优先使用事件位置，异常时回退到选区中心
             let anchorX = eventPos.x;
-            let anchorY = eventPos.y;
+            let anchorY = rect.top < window.innerHeight / 2 ? rect.bottom : rect.top; // 动态选择顶部或底部
             if (rect.width === 0 && rect.height === 0) {
-                // 跨多行选择或选区不可见时，使用事件位置
+                anchorX = eventPos.x;
+                anchorY = eventPos.y;
             } else {
-                anchorX = (rect.left + rect.right) / 2; // 选区水平中心
-                anchorY = rect.bottom; // 选区底部
+                anchorX = (rect.left + rect.right) / 2;
             }
 
-            // 生成菜单内容
             contextMenu.innerHTML = `
                 <div class="menu-item" onclick="copyText(this)" data-selected="${selectedText}">复制</div>
                 <div class="menu-divider">|</div>
