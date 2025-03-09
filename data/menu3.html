@@ -156,13 +156,13 @@
             const menuRect = element.getBoundingClientRect();
 
             // 垂直方向调整
-            let top = anchorY - menuRect.height - 10; // 默认在内容上方
+            let top = anchorY - menuRect.height - 30; // 默认在内容上方
             let direction = 'up';
             if (top < 10) { // 如果上方空间不足，显示在下方
-                top = anchorY + 10;
+                top = anchorY + 30;
                 direction = 'down';
             }
-            top = Math.max(10, top); // 最小上边距
+            top = Math.max(30, top); // 最小上边距
 
             // 水平方向调整（居中对齐）
             let left = anchorX - menuRect.width / 2; // 居中于锚点
