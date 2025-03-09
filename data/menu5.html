@@ -243,15 +243,18 @@
             translatePopup.style.display = 'none';
         }
 
-        // 点击外部隐藏
         document.addEventListener('click', (e) => {
-            if (!contextMenu.contains(e.target) && contextMenu.style.display === 'block') {
-                contextMenu.style.display = 'none';
-            }
-            if (!translatePopup.contains(e.target) && translatePopup.style.display === 'block' && !e.target.classList.contains('menu-item')) {
-                translatePopup.style.display = 'none';
-            }
-        });
+    if (!contextMenu.contains(e.target) && !translatePopup.contains(e.target)) {
+        contextMenu.style.display = 'none';
+        translatePopup.style.display = 'none';
+    }
+});
+
+    // 阻止翻译弹窗的所有触摸事件冒泡
+    translatePopup.addEventListener('touchstart', (e) => e.stopPropagation());
+    translatePopup.addEventListener('touchmove', (e) => e.stopPropagation());
+    translatePopup.addEventListener('touchend', (e) => e.stopPropagation());
+
 
         // 窗口大小变化时重新定位
         window.addEventListener('resize', () => {
