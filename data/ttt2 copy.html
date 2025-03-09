@@ -152,15 +152,10 @@
                 let customMenu = document.getElementById('contextMenu');
 //                 // 生成菜单内容
                 contextMenu.innerHTML = `
-                    <div class="menu-item" id= "copy-button">复制</div>
-                    <div class="menu-item" id= "translate-button">翻译</div>
+                    <div class="menu-item" id= "copy-button" onclick="copyText(this)" data-selected="${selectedText}">复制</div>
+                    <div class="menu-item" id= "copy-button" onclick="translateText(this)" data-selected="${selectedText}">翻译</div>
                     <div class="menu-divider"></div>
                 `;
-                const copyButton = contextMenu.querySelector('#copy-button');
-                const translateButton = contextMenu.querySelector('#translate-button');
-
-                copyButton.addEventListener('click', copyText);
-                translateButton.addEventListener('click', translateText);
                 // customMenu.style.display = 'block';
 
                 smartPosition(contextMenu, anchorX, anchorY);
