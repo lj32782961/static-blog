@@ -1,16 +1,7 @@
 
 [
     {"title": "德语学习助手", "url": "gemini德语助手.html", "date": "2025-03-05"},
-    
-    {"title": "menu2", "url": "menu2.html", "date": "2025-03-07"},
-    {"title": "menu0", "url": "menu0.html", "date": "2025-03-07"},
-    {"title": "menu3", "url": "menu3.html", "date": "2025-03-09"},
-    {"title": "menu4", "url": "menu4.html", "date": "2025-03-09"},
-    {"title": "menu5", "url": "menu5.html", "date": "2025-03-10"},
-   
-    {"title": "ttt", "url": "ttt.html", "date": "2025-03-08"},
-    
-    
+    {"title": "自定义菜单", "url": "自定义菜单.html", "date": "2025-03-9"},   
     {"title": "", "url": "效率工具", "date": ""}
 ]
 
