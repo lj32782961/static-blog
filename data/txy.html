@@ -23,7 +23,7 @@
 <script>
   let timer;
   const textElement = document.getElementById('text');
-
+  document.addEventListener('contextmenu', (e) => e.preventDefault());
   textElement.addEventListener('touchstart', function(event) {
     timer = setTimeout(() => {
       // 长按触发，可以选择文本或执行其他操作
