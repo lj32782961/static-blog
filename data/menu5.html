@@ -249,7 +249,10 @@
         translatePopup.style.display = 'none';
     }
 });
-
+// 阻止翻译弹窗内的点击事件冒泡
+translatePopup.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
     // 阻止翻译弹窗的所有触摸事件冒泡
     translatePopup.addEventListener('touchstart', (e) => e.stopPropagation());
     translatePopup.addEventListener('touchmove', (e) => e.stopPropagation());
