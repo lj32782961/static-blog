@@ -148,7 +148,7 @@
         function startTouch(event) {
             touchTimer = setTimeout(() => {
                 handleSelection(event);
-            }, 500); // 长按500ms触发
+            }, 500);
         }
 
         function endTouch(event) {
@@ -165,11 +165,10 @@
             const selectedText = selection.toString().trim();
             if (!selectedText || contextMenu.style.display !== 'block') return;
 
-            // 更新菜单内容和位置
             const range = selection.getRangeAt(0);
             const rect = range.getBoundingClientRect();
-            const anchorX = (rect.left + rect.right) / 2; // 选区水平中心
-            const anchorY = rect.top < window.innerHeight / 2 ? rect.bottom : rect.top; // 根据选区位置选择顶部或底部
+            const anchorX = (rect.left + rect.right) / 2;
+            const anchorY = rect.top < window.innerHeight / 2 ? rect.bottom : rect.top;
             lastPosition = { x: anchorX, y: anchorY };
 
             contextMenu.innerHTML = `
@@ -180,7 +179,6 @@
             smartPosition(contextMenu, anchorX, anchorY);
         });
 
-        // 智能定位函数
         function smartPosition(element, anchorX, anchorY) {
             const viewport = {
                 width: window.innerWidth,
@@ -190,14 +188,13 @@
             element.style.display = 'block';
             const menuRect = element.getBoundingClientRect();
 
-            let top = anchorY - menuRect.height - 30; // 默认在上方
+            let top = anchorY - menuRect.height - 30;
             let direction = 'up';
-            if (top < 30 || anchorY > window.innerHeight / 2) { // 如果上方空间不足或选区在下半屏，显示在下方
+            if (top < 30 || anchorY > window.innerHeight / 2) {
                 top = anchorY + 30;
                 direction = 'down';
             }
-            top = Math.max(30, Math.min(top, viewport.height - menuRect.height - 30)); // 限制在视口内
-
+            top = Math.max(30, Math.min(top, viewport.height - menuRect.height - 30));
             let left = anchorX - menuRect.width / 2;
             left = Math.max(10, Math.min(left, viewport.width - menuRect.width - 10));
 
@@ -228,7 +225,7 @@
             const eventPos = getEventPosition(event);
 
             let anchorX = eventPos.x;
-            let anchorY = rect.top < window.innerHeight / 2 ? rect.bottom : rect.top; // 动态选择顶部或底部
+            let anchorY = rect.top < window.innerHeight / 2 ? rect.bottom : rect.top;
             if (rect.width === 0 && rect.height === 0) {
                 anchorX = eventPos.x;
                 anchorY = eventPos.y;
@@ -248,8 +245,10 @@
 
         // 点击外部隐藏
         document.addEventListener('click', (e) => {
-            if (!contextMenu.contains(e.target) && !translatePopup.contains(e.target)) {
+            if (!contextMenu.contains(e.target) && contextMenu.style.display === 'block') {
                 contextMenu.style.display = 'none';
+            }
+            if (!translatePopup.contains(e.target) && translatePopup.style.display === 'block' && !e.target.classList.contains('menu-item')) {
                 translatePopup.style.display = 'none';
             }
         });
@@ -267,14 +266,10 @@
         // 复制
         function copyText(element) {
             const selectedText = element.dataset.selected;
-            console.log('尝试复制的文本:', selectedText); // 调试用
-            
-            // 添加点击动画
             element.classList.add('clicked');
             setTimeout(() => element.classList.remove('clicked'), 300);
 
             if (!selectedText) {
-                console.error('没有选中文本');
                 alert('没有选中文本可复制');
                 contextMenu.style.display = 'none';
                 return;
@@ -286,16 +281,13 @@
                     })
                     .catch(err => {
                         console.error('Clipboard API 复制失败:', err);
-                        fallbackCopy(selectedText); // 使用备用方案
+                        fallbackCopy(selectedText);
                     });
             } else {
-                // Clipboard API 不可用时使用备用方案
                 fallbackCopy(selectedText);
             }
-            
         }
 
-        // 备用复制方案
         function fallbackCopy(text) {
             const tempInput = document.createElement('textarea');
             tempInput.value = text;
@@ -306,11 +298,9 @@
                 if (successful) {
                     showCopySuccess();
                 } else {
-                    console.error('备用复制失败');
                     alert('复制失败，请手动复制');
                 }
             } catch (err) {
-                console.error('备用复制异常:', err);
                 alert('复制失败，请手动复制');
             }
             document.body.removeChild(tempInput);
@@ -334,23 +324,27 @@
             };
             const translated = translations[selectedText] || '翻译结果：' + selectedText.split('').join('');
             
-            // 添加点击动画
             element.classList.add('clicked');
             setTimeout(() => element.classList.remove('clicked'), 300);
             
-            // 关闭原始菜单
             contextMenu.style.display = 'none';
-
             translateTextarea.value = translated;
-
-            //调整翻译弹窗的位置
+            translatePopup.style.display = 'block';
             smartPosition(translatePopup, lastPosition.x, lastPosition.y);
+            
+            element.addEventListener('click', (e) => e.stopPropagation());
         }
 
-        // 关闭翻译弹窗
         function closeTranslatePopup() {
             translatePopup.style.display = 'none';
         }
+
+        // 初始化时阻止菜单内点击冒泡
+        document.addEventListener('DOMContentLoaded', () => {
+            contextMenu.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        });
     </script>
 </body>
 </html>
