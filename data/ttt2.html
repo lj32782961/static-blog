@@ -308,9 +308,8 @@
         });
 
         // 复制
-        function copyText(event) {
-            // const selectedText = element.dataset.selected;
-            let selectedText = event.target.dataset.selected; //从这里获取选中的文本
+        function copyText(element) {
+            const selectedText = element.dataset.selected;
             console.log('尝试复制的文本:', selectedText); // 调试用
 
             if (!selectedText) {
@@ -365,7 +364,7 @@
         }
 
         // 翻译功能
-        function translateText(event) {
+        function translateText(element) {
             const selectedText = element.dataset.selected;
             const translations = {
                 '测试': 'test',
