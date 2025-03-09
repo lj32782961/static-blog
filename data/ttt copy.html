@@ -32,37 +32,35 @@
 
     <script>
         document.addEventListener('contextmenu', (e) => e.preventDefault());
-        document.addEventListener('touchend', handleSelection);
+        document.addEventListener('touchend', function(event) {
+            let selection = window.getSelection();
+            let selectedText = selection.toString().trim();
 
-function handleSelection(event) {
-    let selection = window.getSelection();
-    let selectedText = selection.toString().trim();
+            if (selectedText.length > 0) {
+                // Prevent the default context menu
+                // event.preventDefault();
 
-    if (selectedText.length > 0) {
-        // Prevent the default context menu
-        // event.preventDefault();
+                // Get the position of the selected text
+                let range = selection.getRangeAt(0);
+                let rect = range.getBoundingClientRect();
 
-        // Get the position of the selected text
-        let range = selection.getRangeAt(0);
-        let rect = range.getBoundingClientRect();
+                // Show the custom menu at the selection position
+                let customMenu = document.getElementById('custom-menu');
+                customMenu.style.display = 'block';
+                customMenu.style.top = `${rect.bottom + window.scrollY}px`;
+                customMenu.style.left = `${rect.left + window.scrollX}px`;
 
-        // Show the custom menu at the selection position
-        let customMenu = document.getElementById('custom-menu');
-        customMenu.style.display = 'block';
-        customMenu.style.top = `${rect.bottom + window.scrollY}px`;
-        customMenu.style.left = `${rect.left + window.scrollX}px`;
-
-        // Copy the selected text when the copy button is clicked
-        document.getElementById('copy-button').onclick = function() {
-            navigator.clipboard.writeText(selectedText).then(function() {
-                alert('Text copied to clipboard');
-                customMenu.style.display = 'none';
-            }).catch(function(err) {
-                console.error('Failed to copy text: ', err);
-            });
-        };
-    }
-}
+                // Copy the selected text when the copy button is clicked
+                document.getElementById('copy-button').onclick = function() {
+                    navigator.clipboard.writeText(selectedText).then(function() {
+                        alert('Text copied to clipboard');
+                        customMenu.style.display = 'none';
+                    }).catch(function(err) {
+                        console.error('Failed to copy text: ', err);
+                    });
+                };
+            }
+        });
 
         // Hide the custom menu when clicking outside
         document.addEventListener('touchstart', function(event) {
