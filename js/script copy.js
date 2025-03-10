@@ -198,8 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const contextMenu = document.getElementById('contextMenu');
         const copyMessage = document.getElementById('copyMessage');
         const translatePopup = document.getElementById('translatePopup');
-        // const translateTextarea = translatePopup.querySelector('textarea');
-        const translationResult = document.getElementById('translationResult');
+        const translateTextarea = translatePopup.querySelector('textarea');
         let lastPosition = { x: 0, y: 0 };
         let touchTimer;
 
@@ -316,13 +315,6 @@ document.addEventListener('DOMContentLoaded', () => {
             element.style.top = `${top + window.scrollY}px`;
             element.style.left = `${left + window.scrollX}px`;
             element.className = direction === 'up' ? 'upward' : '';
-
-            // 添加自动高度计算
-            const maxHeight = window.innerHeight - 60;
-            element.style.maxHeight = `${maxHeight}px`;
-            
-            // 添加宽度控制
-            element.style.maxWidth = `${Math.min(500, window.innerWidth - 40)}px`;
         }
 
         function getEventPosition(event) {
@@ -490,8 +482,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 统一显示翻译结果
         function showTranslationResult(result) {
-            // // translateTextarea.value = result;
-            translationResult.innerHTML = result;  // 使用innerHTML而不是value
+            translateTextarea.value = result;
             translatePopup.style.display = 'block';
             smartPosition(translatePopup, lastPosition.x, lastPosition.y);
         }
@@ -512,19 +503,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // 清理响应内容
                 let cleanedText = responseText
-                    .replace(/["“”]/g, '')
-                    .replace(/^\s*Translation:\s*/i, '')
+                    .replace(/["“”]/g, '') // 移除引号
+                    .replace(/^\s*Translation:\s*/i, '') // 移除可能的前缀
                     .trim();
 
-                try {
-                    const htmlText = marked.parse(cleanedText);
-                    // 使用 DOMPurify 消毒 HTML
-                    const sanitizedHtml = DOMPurify.sanitize(htmlText);
-                    return sanitizedHtml;
-                } catch (markdownError) {
-                    console.error("Markdown 解析错误:", markdownError);
-                    return `<p>Markdown 解析错误: ${markdownError.message}</p>`; // 返回错误信息
-                }
+                // 将 Markdown 转换为 HTML
+                const htmlText = marked.parse(cleanedText);
+                console.log(htmlText);
+
+                return htmlText; // 返回转换后的 HTML
+                    
             } catch (error) {
                 // if (retryCount > 0) {
                 //     console.log(`剩余重试次数: ${retryCount}`);
