@@ -256,6 +256,43 @@ document.addEventListener('DOMContentLoaded', () => {
             smartPosition(contextMenu, anchorX, anchorY);
         });
 
+        function handleSelection(event) {
+            const selection = window.getSelection();
+            selectedText = selection.toString().trim();
+
+            // 新增判断：检测事件目标是否在翻译弹窗内，如果在，则不弹出自定义菜单
+            if (event.target && translatePopup.contains(event.target)) {
+                return;
+            }
+            if (!selectedText) {
+                contextMenu.style.display = 'none';
+                // translatePopup.style.display = 'none';
+                return;
+            }
+
+            const range = selection.getRangeAt(0);
+            const rect = range.getBoundingClientRect();
+            const eventPos = getEventPosition(event);
+
+            let anchorX = eventPos.x;
+            let anchorY = rect.top < window.innerHeight / 2 ? rect.bottom : rect.top;
+            if (rect.width === 0 && rect.height === 0) {
+                anchorX = eventPos.x;
+                anchorY = eventPos.y;
+            } else {
+                anchorX = (rect.left + rect.right) / 2;
+            }
+
+            contextMenu.innerHTML = `
+                <div class="menu-item" onclick="copyText(this)" data-selected="${selectedText}">复制</div>
+                <div class="menu-divider">|</div>
+                <div class="menu-item" onclick="translateText(this)" data-selected="${selectedText}">翻译</div>
+            `;
+            smartPosition(contextMenu, anchorX, anchorY);
+            lastPosition = { x: anchorX, y: anchorY };
+            // translatePopup.style.display = 'none';
+        }
+
         function smartPosition(element, anchorX, anchorY) {
             const viewport = {
                 width: window.innerWidth,
@@ -288,46 +325,14 @@ document.addEventListener('DOMContentLoaded', () => {
             return { x: event.clientX, y: event.clientY };
         }
 
-        function handleSelection(event) {
-            const selection = window.getSelection();
-            selectedText = selection.toString().trim();
-
-            // 新增判断：检测事件目标是否在翻译弹窗内
-    if (event.target && translatePopup.contains(event.target)) {
-        return;
-    }
-            if (!selectedText) {
-                contextMenu.style.display = 'none';
-                // translatePopup.style.display = 'none';
-                return;
-            }
-
-            const range = selection.getRangeAt(0);
-            const rect = range.getBoundingClientRect();
-            const eventPos = getEventPosition(event);
-
-            let anchorX = eventPos.x;
-            let anchorY = rect.top < window.innerHeight / 2 ? rect.bottom : rect.top;
-            if (rect.width === 0 && rect.height === 0) {
-                anchorX = eventPos.x;
-                anchorY = eventPos.y;
-            } else {
-                anchorX = (rect.left + rect.right) / 2;
-            }
-
-            contextMenu.innerHTML = `
-                <div class="menu-item" onclick="copyText(this)" data-selected="${selectedText}">复制</div>
-                <div class="menu-divider">|</div>
-                <div class="menu-item" onclick="translateText(this)" data-selected="${selectedText}">翻译</div>
-            `;
-            smartPosition(contextMenu, anchorX, anchorY);
-            lastPosition = { x: anchorX, y: anchorY };
-            // translatePopup.style.display = 'none';
-        }
-        //关闭
+        
+        //全局点击事件监听，用于在点击非菜单/弹窗区域时关闭它们
         document.addEventListener('click', (e) => {
+            // 判断点击目标是否既不在上下文菜单内，也不在翻译弹窗内
             if (!contextMenu.contains(e.target) && !translatePopup.contains(e.target)) {
+                // 隐藏上下文菜单
                 contextMenu.style.display = 'none';
+                // 隐藏翻译弹窗
                 translatePopup.style.display = 'none';
             }
         });
@@ -349,6 +354,33 @@ document.addEventListener('DOMContentLoaded', () => {
             if (translatePopup.style.display === 'block') {
                 smartPosition(translatePopup, lastPosition.x, lastPosition.y);
             }
+        });
+
+        //          * 初始化时阻止菜单内点击事件冒泡
+//         * 
+//         * 功能说明：
+//         * 1. 在页面DOM加载完成后执行
+//         * 2. 为自定义菜单(contextMenu)添加点击事件监听器
+//         * 3. 阻止菜单内部的点击事件冒泡到父元素或文档
+//         * 
+//         * 实现逻辑：
+//         * - 使用 DOMContentLoaded 事件确保DOM完全加载后再绑定事件
+//         * - 使用 stopPropagation() 方法阻止事件冒泡
+//         * 
+//         * 作用：
+//         * - 防止菜单内部的点击事件触发全局点击事件处理器
+//         * - 避免菜单在点击内部选项时意外关闭
+//         * 
+//         * 注意：
+//         * - 需要与全局点击事件处理器配合使用
+//         * - 确保菜单内部的点击操作不会影响外部逻辑
+//         */
+        document.addEventListener('DOMContentLoaded', () => {
+            // 为自定义菜单添加点击事件监听器
+            contextMenu.addEventListener('click', (e) => {
+                // 阻止事件冒泡，避免触发父元素或文档的点击事件
+                e.stopPropagation();
+            });
         });
 
         // 复制
@@ -408,7 +440,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // 翻译功能
         async function translateText(element) {
             if (isTranslating) return;
-            const selectedText = element.dataset.selected.trim();
+            const selectedText = element.dataset.selected.trim();//trim() 方法去掉了字符串开头和结尾的空格符（包括空格、制表符和换行符）。
 
             if (!selectedText) {
                 showTranslationResult('⚠️ 请输入要翻译的内容');
@@ -420,9 +452,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 element.classList.add('loading');
                 contextMenu.style.display = 'none';
 
-                // 调用Gemini API，调用翻译函数（自动重试2次）
+                // 调用Gemini API，调用翻译函数
                 // console.log(`在function translateText-selectedText: ${selectedText}`);
-
                 const translated = await translateWithGemini(selectedText);
                 showTranslationResult(translated);
 
@@ -449,143 +480,137 @@ document.addEventListener('DOMContentLoaded', () => {
             translatePopup.style.display = 'none';
         }
 
-        // 初始化时阻止菜单内点击冒泡
-        document.addEventListener('DOMContentLoaded', () => {
-            contextMenu.addEventListener('click', (e) => {
-                e.stopPropagation();
-            });
-        });
-
-// 专用翻译API调用函数
-async function translateWithGemini(text, retryCount = 2) {
-    try {
-        // const targetLang = navigator.language.startsWith('zh') ? '英文' : '简体中文';
-        // const prompt = `请将以下内容翻译为${targetLang}，只需返回译文不要任何解释：\n"${text}"`;
-        
-        let symbol = "'";
-
-        const prompt = symbol + text + symbol+ `请识别单引号之间内容的语言，如果是中文，则翻译成德语和英语；`;
-        // console.log(prompt);
-
-        const responseText = await sendMessageToAPI(prompt);
-        
-        // 清理响应内容
-        return responseText
-            .replace(/["“”]/g, '') // 移除引号
-            .replace(/^\s*Translation:\s*/i, '') // 移除可能的前缀
-            .trim();
-            
-    } catch (error) {
-        if (retryCount > 0) {
-            console.log(`剩余重试次数: ${retryCount}`);
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            return translateWithGemini(text, retryCount - 1);
+        // 统一显示翻译结果
+        function showTranslationResult(result) {
+            translateTextarea.value = result;
+            translatePopup.style.display = 'block';
+            smartPosition(translatePopup, lastPosition.x, lastPosition.y);
         }
-        throw new Error(`翻译失败: ${error.message}`);
-    }
-}
 
-async function sendMessageToAPI(message) {
-    const modelName = "gemini-1.5-flash";
-    const maxToken = 10000;
-    const RETRY_DELAY = 2000;
-    const MAX_RETRIES = keys.length;
-    let retries = MAX_RETRIES;
-    let lastError = null;
-    let currentApiKeyIndex = Math.floor(Math.random() * keys.length);
-    const initialIndex = currentApiKeyIndex;
 
-    while (retries > 0) {
-        try {
-            const currentApiKey = keys[currentApiKeyIndex];
-            console.log(`尝试使用 API Key [${currentApiKeyIndex}]: ${currentApiKey.slice(0, 8)}****`);
+        // 专用翻译API调用函数
+        async function translateWithGemini(text) {
+        // async function translateWithGemini(text, retryCount = 2) {//retryCount = 2有点多余
+            try {
+                // const targetLang = navigator.language.startsWith('zh') ? '英文' : '简体中文';
+                // const prompt = `请将以下内容翻译为${targetLang}，只需返回译文不要任何解释：\n"${text}"`;
+                
+                let symbol = "'";
+                const prompt = symbol + text + symbol+ `请自动帮我检测单引号中内容的语言（中文，英文，德语中的一种），并自动翻译成另外两种语言并给出该对应语言的例句以及例句的中文翻译。按照以下格式输出：\n检测到的语言：中文 \n**翻译：** \n* **英文:** stapler \n* **例句:** I need a stapler to fasten these papers together. 我需要一个订书机来把这些纸订在一起。\n* **德文:** Hefter \n* **例句:** Der Hefter ist kaputt. 订书机坏了。`;
+                // console.log(prompt);
 
-            // 添加请求超时控制
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 15000);
+                const responseText = await sendMessageToAPI(prompt);
+                
+                // 清理响应内容
+                let cleanedText = responseText
+                    .replace(/["“”]/g, '') // 移除引号
+                    .replace(/^\s*Translation:\s*/i, '') // 移除可能的前缀
+                    .trim();
 
-            const response = await fetch(
-                `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "x-goog-api-key": currentApiKey
-                    },
-                    body: JSON.stringify({
-                        contents: [{
-                            parts: [{ text: message }]
-                        }],
-                        generationConfig: {
-                            maxOutputTokens: maxToken
+                // 将 Markdown 转换为 HTML
+                const htmlText = marked.parse(cleanedText);
+                console.log(htmlText);
+
+                return htmlText; // 返回转换后的 HTML
+                    
+            } catch (error) {
+                // if (retryCount > 0) {
+                //     console.log(`剩余重试次数: ${retryCount}`);
+                //     await new Promise(resolve => setTimeout(resolve, 1000));
+                //     return translateWithGemini(text, retryCount - 1);
+                // }
+                throw new Error(`翻译失败: ${error.message}`);
+            }
+        }
+
+        async function sendMessageToAPI(message) {
+            const modelName = "gemini-1.5-flash";
+            const maxToken = 100000;
+            const RETRY_DELAY = 2000;
+            const MAX_RETRIES = keys.length;
+            let retries = MAX_RETRIES;
+            let lastError = null;
+            let currentApiKeyIndex = Math.floor(Math.random() * keys.length);
+            const initialIndex = currentApiKeyIndex;
+
+            while (retries > 0) {
+                try {
+                    const currentApiKey = keys[currentApiKeyIndex];
+                    // console.log(`尝试使用 API Key [${currentApiKeyIndex}]: ${currentApiKey.slice(0, 8)}****`);
+
+                    // 添加请求超时控制
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 120000);
+
+                    const response = await fetch(
+                        `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent`,
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "x-goog-api-key": currentApiKey
+                            },
+                            body: JSON.stringify({
+                                contents: [{
+                                    parts: [{ text: message }]
+                                }],
+                                generationConfig: {
+                                    maxOutputTokens: maxToken
+                                }
+                            }),
+                            signal: controller.signal
                         }
-                    }),
-                    signal: controller.signal
+                    );
+
+                    clearTimeout(timeoutId);
+
+                    const data = await response.json();
+                    
+                    if (!response.ok) {
+                        throw new Error(data.error?.message || `HTTP 错误: ${response.status}`);
+                    }
+
+                    if (!data?.candidates?.[0]?.content?.parts?.[0]?.text) {
+                        throw new Error("无效的 API 响应结构");
+                    }
+
+                    // 成功时返回清理后的结果
+                    return data.candidates[0].content.parts[0].text.trim();
+
+                } catch (error) {
+                    console.error(`请求失败 (Key ${currentApiKeyIndex}):`, error);
+                    lastError = error;
+                    
+                    // 轮换到下一个 Key
+                    currentApiKeyIndex = (currentApiKeyIndex + 1) % keys.length;
+                    retries--;
+
+                    // 完整轮换一轮后添加延迟
+                    if (currentApiKeyIndex === initialIndex) {
+                        await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
+                    }
                 }
-            );
-
-            clearTimeout(timeoutId);
-
-            const data = await response.json();
-            
-            if (!response.ok) {
-                throw new Error(data.error?.message || `HTTP 错误: ${response.status}`);
             }
 
-            if (!data?.candidates?.[0]?.content?.parts?.[0]?.text) {
-                throw new Error("无效的 API 响应结构");
-            }
+            throw new Error(`所有 API Key 均失败，，请稍后刷新重试。 ${lastError?.message || "未知错误"}`);
+        }
 
-            // 成功时返回清理后的结果
-            return data.candidates[0].content.parts[0].text.trim();
 
-        } catch (error) {
-            console.error(`请求失败 (Key ${currentApiKeyIndex}):`, error);
-            lastError = error;
+        // 异步加载配置
+        async function loadConfig() {
+            try {
+            const response = await fetch('../assets/config.json');
+            const config = await response.json();
+            keys = config.keys;
             
-            // 轮换到下一个 Key
-            currentApiKeyIndex = (currentApiKeyIndex + 1) % keys.length;
-            retries--;
-
-            // 完整轮换一轮后添加延迟
-            if (currentApiKeyIndex === initialIndex) {
-                await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
+            if (keys.length === 0) {
+                throw new Error("秘钥配置为空");
+            }
+            
+            //   console.log("配置加载成功");
+            } catch (error) {
+            console.error("配置加载失败:", error);
             }
         }
-    }
-
-    throw new Error(`所有 API Key 均失败: ${lastError?.message || "未知错误"}`);
-}
-
-// 统一显示翻译结果
-function showTranslationResult(result) {
-    translateTextarea.value = result;
-    translatePopup.style.display = 'block';
-    smartPosition(translatePopup, lastPosition.x, lastPosition.y);
-}
-        // 异步加载配置
-async function loadConfig() {
-    try {
-      const response = await fetch('../assets/config.json');
-      const config = await response.json();
-      keys = config.keys;
-    //   console.log(keys);
-      
-      if (keys.length === 0) {
-        throw new Error("秘钥配置为空");
-      }
-      
-    //   console.log("配置加载成功");
-    //   initApp(); // 配置加载完成后初始化应用
-    } catch (error) {
-      console.error("配置加载失败:", error);
-    //   showErrorToUser("无法加载API配置");
-    }
-  }
-  // 页面初始化时加载
-window.addEventListener('DOMContentLoaded', loadConfig);
-
-// function initApp() {
-//     document.getElementById('sendBtn').disabled = false;
-//     // console.log("应用初始化完成");
-//   }
+        // 页面初始化时加载
+        window.addEventListener('DOMContentLoaded', loadConfig);
