@@ -407,6 +407,26 @@ footer {
     color: #ccc;
 }
 
+.loading {
+    position: relative;
+    color: transparent !important;
+}
+.loading::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #ddd;
+    border-top-color: #333;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
 
 /* 响应式设计 */
 @media (max-width: 768px) {

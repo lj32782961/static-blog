@@ -193,8 +193,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-// 菜单
-let selectedText = '';
+        //自定义 菜单
+        let selectedText = '';
         const contextMenu = document.getElementById('contextMenu');
         const copyMessage = document.getElementById('copyMessage');
         const translatePopup = document.getElementById('translatePopup');
@@ -229,6 +229,17 @@ let selectedText = '';
         document.addEventListener('selectionchange', () => {
             const selection = window.getSelection();
             const selectedText = selection.toString().trim();
+            
+            // 新增判断：检测选区是否在翻译弹窗内
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                const container = range.commonAncestorContainer;
+                if (translatePopup.contains(container)) {
+                    contextMenu.style.display = 'none'; // 确保隐藏菜单
+                    return; // 直接返回不处理
+                }
+            }
+            
             if (!selectedText || contextMenu.style.display !== 'block') return;
 
             const range = selection.getRangeAt(0);
@@ -280,6 +291,11 @@ let selectedText = '';
         function handleSelection(event) {
             const selection = window.getSelection();
             selectedText = selection.toString().trim();
+
+            // 新增判断：检测事件目标是否在翻译弹窗内
+    if (event.target && translatePopup.contains(event.target)) {
+        return;
+    }
             if (!selectedText) {
                 contextMenu.style.display = 'none';
                 // translatePopup.style.display = 'none';
@@ -386,23 +402,45 @@ let selectedText = '';
             contextMenu.style.display = 'none';
         }
 
+        // 在全局添加翻译状态标识
+        let isTranslating = false;
+
         // 翻译功能
-        function translateText(element) {
-            const selectedText = element.dataset.selected;
-            const translations = {
-                '测试': 'test',
-                '文字': 'text',
-                '效果': 'effect'
-            };
-            const translated = translations[selectedText] || '翻译结果：' + selectedText.split('').join('');
+        async function translateText(element) {
+            if (isTranslating) return;
+            const selectedText = element.dataset.selected.trim();
+
+            if (!selectedText) {
+                showTranslationResult('⚠️ 请输入要翻译的内容');
+                return;
+            }
+
+            try{
+                isTranslating = true;
+                element.classList.add('loading');
+                contextMenu.style.display = 'none';
+
+                // 调用Gemini API，调用翻译函数（自动重试2次）
+                // console.log(`在function translateText-selectedText: ${selectedText}`);
+
+                const translated = await translateWithGemini(selectedText);
+                showTranslationResult(translated);
+
+            }catch(error){
+                console.log('翻译失败：',error);
+                showTranslationResult(`⚠️ 翻译失败: ${error.message}`);
+            } finally{
+                isTranslating = false;
+                element.classList.remove('loading');
+            }
             
             element.classList.add('clicked');
             setTimeout(() => element.classList.remove('clicked'), 300);
             
             contextMenu.style.display = 'none';
-            translateTextarea.value = translated;
-            translatePopup.style.display = 'block';
-            smartPosition(translatePopup, lastPosition.x, lastPosition.y);
+            // translateTextarea.value = translated;
+            // translatePopup.style.display = 'block';
+            // smartPosition(translatePopup, lastPosition.x, lastPosition.y);
             
             element.addEventListener('click', (e) => e.stopPropagation());
         }
@@ -417,3 +455,137 @@ let selectedText = '';
                 e.stopPropagation();
             });
         });
+
+// 专用翻译API调用函数
+async function translateWithGemini(text, retryCount = 2) {
+    try {
+        // const targetLang = navigator.language.startsWith('zh') ? '英文' : '简体中文';
+        // const prompt = `请将以下内容翻译为${targetLang}，只需返回译文不要任何解释：\n"${text}"`;
+        
+        let symbol = "'";
+
+        const prompt = symbol + text + symbol+ `请识别单引号之间内容的语言，如果是中文，则翻译成德语和英语；`;
+        // console.log(prompt);
+
+        const responseText = await sendMessageToAPI(prompt);
+        
+        // 清理响应内容
+        return responseText
+            .replace(/["“”]/g, '') // 移除引号
+            .replace(/^\s*Translation:\s*/i, '') // 移除可能的前缀
+            .trim();
+            
+    } catch (error) {
+        if (retryCount > 0) {
+            console.log(`剩余重试次数: ${retryCount}`);
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            return translateWithGemini(text, retryCount - 1);
+        }
+        throw new Error(`翻译失败: ${error.message}`);
+    }
+}
+
+async function sendMessageToAPI(message) {
+    const modelName = "gemini-1.5-flash";
+    const maxToken = 10000;
+    const RETRY_DELAY = 2000;
+    const MAX_RETRIES = keys.length;
+    let retries = MAX_RETRIES;
+    let lastError = null;
+    let currentApiKeyIndex = Math.floor(Math.random() * keys.length);
+    const initialIndex = currentApiKeyIndex;
+
+    while (retries > 0) {
+        try {
+            const currentApiKey = keys[currentApiKeyIndex];
+            console.log(`尝试使用 API Key [${currentApiKeyIndex}]: ${currentApiKey.slice(0, 8)}****`);
+
+            // 添加请求超时控制
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+            const response = await fetch(
+                `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-goog-api-key": currentApiKey
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{ text: message }]
+                        }],
+                        generationConfig: {
+                            maxOutputTokens: maxToken
+                        }
+                    }),
+                    signal: controller.signal
+                }
+            );
+
+            clearTimeout(timeoutId);
+
+            const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.error?.message || `HTTP 错误: ${response.status}`);
+            }
+
+            if (!data?.candidates?.[0]?.content?.parts?.[0]?.text) {
+                throw new Error("无效的 API 响应结构");
+            }
+
+            // 成功时返回清理后的结果
+            return data.candidates[0].content.parts[0].text.trim();
+
+        } catch (error) {
+            console.error(`请求失败 (Key ${currentApiKeyIndex}):`, error);
+            lastError = error;
+            
+            // 轮换到下一个 Key
+            currentApiKeyIndex = (currentApiKeyIndex + 1) % keys.length;
+            retries--;
+
+            // 完整轮换一轮后添加延迟
+            if (currentApiKeyIndex === initialIndex) {
+                await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
+            }
+        }
+    }
+
+    throw new Error(`所有 API Key 均失败: ${lastError?.message || "未知错误"}`);
+}
+
+// 统一显示翻译结果
+function showTranslationResult(result) {
+    translateTextarea.value = result;
+    translatePopup.style.display = 'block';
+    smartPosition(translatePopup, lastPosition.x, lastPosition.y);
+}
+        // 异步加载配置
+async function loadConfig() {
+    try {
+      const response = await fetch('../assets/config.json');
+      const config = await response.json();
+      keys = config.keys;
+    //   console.log(keys);
+      
+      if (keys.length === 0) {
+        throw new Error("秘钥配置为空");
+      }
+      
+    //   console.log("配置加载成功");
+    //   initApp(); // 配置加载完成后初始化应用
+    } catch (error) {
+      console.error("配置加载失败:", error);
+    //   showErrorToUser("无法加载API配置");
+    }
+  }
+  // 页面初始化时加载
+window.addEventListener('DOMContentLoaded', loadConfig);
+
+// function initApp() {
+//     document.getElementById('sendBtn').disabled = false;
+//     // console.log("应用初始化完成");
+//   }
