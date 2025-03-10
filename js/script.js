@@ -318,7 +318,7 @@ document.addEventListener('DOMContentLoaded', () => {
             element.className = direction === 'up' ? 'upward' : '';
 
             // 添加自动高度计算
-            const maxHeight = window.innerHeight - 60;
+            const maxHeight = window.innerHeight - 30;
             element.style.maxHeight = `${maxHeight}px`;
             
             // 添加宽度控制
