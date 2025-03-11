@@ -477,6 +477,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 element.classList.add('loading');
                 contextMenu.style.display = 'none';
 
+                // 立即显示加载提示
+                showTranslationResult('<div class="loading-text">📡 正在查询，请稍后...</div>');
+
                 // 调用Gemini API，调用翻译函数
                 // console.log(`在function translateText-selectedText: ${selectedText}`);
                 const translated = await translateWithGemini(selectedText);
