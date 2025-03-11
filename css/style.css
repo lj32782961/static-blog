@@ -354,9 +354,9 @@ footer {
 
 #translatePopup button {
     display: block;
-    margin: 0 auto;
+    margin: 5px auto;
     padding: 5px 10px;
-    background: #f5f5f5;
+    background: #f4f4f4;
     border: none;
     border-radius: 4px;
     cursor: pointer;
