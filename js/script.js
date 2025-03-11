@@ -523,7 +523,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // const prompt = `请将以下内容翻译为${targetLang}，只需返回译文不要任何解释：\n"${text}"`;
                 // ，英文，德语的另外两种语言并给出该对应语言的例句以及例句的中文翻译。按照以下格式输出：\n检测到的语言：中文 \n**翻译：** \n* **英文:** stapler \n* **例句:** I need a stapler to fasten these papers together. 我需要一个订书机来把这些纸订在一起。\n* **德文:** Hefter \n* **例句:** Der Hefter ist kaputt. 订书机坏了。
                 let symbol = "#";
-            let prompt = symbol + text + symbol
+                let prompt = symbol + text + symbol;
 
             if (contentLang === "中文") {
                 prompt = prompt + `翻译${symbol}中的内容，并严格按照以下格式输出：
