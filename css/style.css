@@ -357,7 +357,8 @@ footer {
     margin: 5px auto;
     padding: 5px 10px;
     background: #f4f4f4;
-    border: none;
+    /* border: none; */
+    border: 1px solid #ddd;
     border-radius: 4px;
     cursor: pointer;
 }
@@ -440,6 +441,7 @@ footer {
       /* 新增全局样式 */
   color: #2c3e50; /* 主文字颜色 */
   font-size: 14px; /* 基准字号 */
+  border: 1px solid #ddd;
   }
   
   .translation-content h3 {
