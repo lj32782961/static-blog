@@ -339,6 +339,7 @@ footer {
     z-index: 1001;
     display: none;
     font-family: Arial, sans-serif;
+
 }
 
 #translatePopup textarea {
@@ -436,6 +437,9 @@ footer {
     white-space: pre-wrap;
     font-family: system-ui, -apple-system;
     line-height: 1.5;
+      /* 新增全局样式 */
+  color: #2c3e50; /* 主文字颜色 */
+  font-size: 14px; /* 基准字号 */
   }
   
   .translation-content h3 {
@@ -447,17 +451,96 @@ footer {
   .translation-content ul {
     margin: 8px 0;
     padding-left: 20px;
+    list-style-type: disc; /* 明确指定符号类型 */
   }
   
   .translation-content li {
-    margin: 4px 0;
+    margin: 6px 0; /* 增大间距 */
+    padding-left: 8px; /* 内容缩进 */
   }
   
   .translation-content strong {
     color: #3498db;
+    font-weight: 600; /* 加强强调效果 */
   }
 
-
+  .translation-content h1 {
+    font-size: 1.4em;
+    margin: 16px 0 8px;
+    color: #2c3e50;
+  }
+  
+  .translation-content h2 {
+    font-size: 1.3em;
+    margin: 14px 0 7px;
+    color: #2c3e50;
+  }
+  
+  .translation-content h4 {
+    font-size: 1em;
+    margin: 10px 0 6px;
+    color: #34495e;
+  }
+  
+  /* 段落样式 */
+  .translation-content p {
+    margin: 8px 0;
+    line-height: 1.6;
+  }
+  
+  /* 有序列表 */
+  .translation-content ol {
+    margin: 8px 0;
+    padding-left: 24px;
+    list-style-type: decimal;
+  }
+  
+  /* 代码块 */
+  .translation-content pre {
+    background: #f8f9fa;
+    padding: 12px;
+    border-radius: 4px;
+    margin: 10px 0;
+    overflow-x: auto;
+  }
+  
+  .translation-content code {
+    font-family: Monaco, Consolas, monospace;
+    font-size: 0.9em;
+  }
+  
+  /* 引用区块 */
+  .translation-content blockquote {
+    border-left: 4px solid #3498db;
+    padding-left: 12px;
+    margin: 10px 0;
+    color: #7f8c8d;
+  }
+  
+  /* 水平分隔线 */
+  .translation-content hr {
+    border: 0;
+    height: 1px;
+    background: #ecf0f1;
+    margin: 16px 0;
+  }
+  
+  /* 表格样式 */
+  .translation-content table {
+    border-collapse: collapse;
+    margin: 12px 0;
+    width: 100%;
+  }
+  
+  .translation-content td, 
+  .translation-content th {
+    padding: 8px;
+    border: 1px solid #ecf0f1;
+  }
+  
+  .translation-content th {
+    background: #f8f9fa;
+  }
 
 
 
@@ -520,7 +603,25 @@ footer {
     .pagination {
         bottom: 40px; /* 在手机上稍微上移 */
     }
+
+    #translatePopup {
+        width: 90%;
+        max-width: none !important;
+        max-height: 80vh !important;
+    }
+    
+    .translation-content {
+        font-size: 14px;
+        padding: 8px;
+    }
+    
+    .translation-content h3 {
+        font-size: 1.05em;
+      }
 }
+
+
+
 
 @media (min-width: 769px) and (max-width: 1024px) {
     .block {
@@ -532,4 +633,7 @@ footer {
       .nav-list {
         display: flex;
       }
+
+
+    
 }

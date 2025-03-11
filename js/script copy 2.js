@@ -299,47 +299,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 width: window.innerWidth,
                 height: window.innerHeight
             };
-        
-            // 判断是否为移动端（可根据需求调整阈值）
-            const isMobile = viewport.width <= 768; // 常见移动端断点
-        
+
             element.style.display = 'block';
             const menuRect = element.getBoundingClientRect();
-        
-            if (isMobile && element.id === 'translatePopup') {
-                // 移动端翻译弹窗特殊处理
-                element.style.position = 'fixed';
-                element.style.top = '50%';
-                element.style.left = '50%';
-                element.style.transform = 'translate(-50%, -50%)';
-                element.style.maxWidth = '90vw';
-                element.style.maxHeight = '80vh';
-                element.style.overflowY = 'auto';
-                return; // 直接返回不执行后续定位逻辑
-            } else {
-                // 恢复默认定位方式
-                element.style.position = 'absolute';
-                element.style.transform = 'none';
-            }
-        
-            // 原有PC端定位逻辑
+
             let top = anchorY - menuRect.height - 30;
             let direction = 'up';
-            if (top < 30 || anchorY > viewport.height / 2) {
+            if (top < 30 || anchorY > window.innerHeight / 2) {
                 top = anchorY + 30;
                 direction = 'down';
             }
             top = Math.max(30, Math.min(top, viewport.height - menuRect.height - 30));
             let left = anchorX - menuRect.width / 2;
             left = Math.max(10, Math.min(left, viewport.width - menuRect.width - 10));
-        
+
             element.style.top = `${top + window.scrollY}px`;
             element.style.left = `${left + window.scrollX}px`;
             element.className = direction === 'up' ? 'upward' : '';
-        
-            // 通用尺寸限制
-            element.style.maxHeight = `${Math.min(600, viewport.height - 60)}px`;
-            element.style.maxWidth = `${Math.min(500, viewport.width - 40)}px`;
+
+            // 添加自动高度计算
+            const maxHeight = window.innerHeight - 30;
+            element.style.maxHeight = `${maxHeight}px`;
+            
+            // 添加宽度控制
+            element.style.maxWidth = `${Math.min(500, window.innerWidth - 40)}px`;
         }
 
         function getEventPosition(event) {
