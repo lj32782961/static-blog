@@ -526,7 +526,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 let prompt = symbol + text + symbol;
 
             if (contentLang === "中文") {
-                prompt = prompt + `翻译${symbol}中的内容，并严格按照以下格式输出：
+                prompt = prompt + `请按照以下格式输出：
             **原文：**${text}
             **语言：**${contentLang}
             ----------------------------------
@@ -541,7 +541,7 @@ document.addEventListener('DOMContentLoaded', () => {
             **例句中文翻译：**
             `;
             }else if (contentLang === "英语"){
-                prompt = prompt + `翻译${symbol}中的内容，并严格按照以下格式输出：
+                prompt = prompt + `请按照以下格式输出：
             **原文：**${text}
             **语言：**${contentLang}
             ----------------------------------
@@ -556,7 +556,7 @@ document.addEventListener('DOMContentLoaded', () => {
             **例句中文翻译：** (可选，如无例句可不提供)
             `;
             }else if (contentLang ==="德语"){
-                prompt = prompt + `翻译${symbol}中的内容，并按照以下格式输出：
+                prompt = prompt + `请按照以下格式输出：
             **原文：**${text}
             **语言：**${contentLang}
             ----------------------------------
