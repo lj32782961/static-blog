@@ -198,7 +198,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const contextMenu = document.getElementById('contextMenu');
         const copyMessage = document.getElementById('copyMessage');
         const translatePopup = document.getElementById('translatePopup');
-        const translateTextarea = translatePopup.querySelector('textarea');
+        // const translateTextarea = translatePopup.querySelector('textarea');
+        const translationResult = document.getElementById('translationResult');
         let lastPosition = { x: 0, y: 0 };
         let touchTimer;
 
@@ -298,23 +299,47 @@ document.addEventListener('DOMContentLoaded', () => {
                 width: window.innerWidth,
                 height: window.innerHeight
             };
-
+        
+            // 判断是否为移动端（可根据需求调整阈值）
+            const isMobile = viewport.width <= 768; // 常见移动端断点
+        
             element.style.display = 'block';
             const menuRect = element.getBoundingClientRect();
-
+        
+            if (isMobile && element.id === 'translatePopup') {
+                // 移动端翻译弹窗特殊处理
+                element.style.position = 'fixed';
+                element.style.top = '50%';
+                element.style.left = '50%';
+                element.style.transform = 'translate(-50%, -50%)';
+                element.style.maxWidth = '90vw';
+                element.style.maxHeight = '80vh';
+                element.style.overflowY = 'auto';
+                return; // 直接返回不执行后续定位逻辑
+            } else {
+                // 恢复默认定位方式
+                element.style.position = 'absolute';
+                element.style.transform = 'none';
+            }
+        
+            // 原有PC端定位逻辑
             let top = anchorY - menuRect.height - 30;
             let direction = 'up';
-            if (top < 30 || anchorY > window.innerHeight / 2) {
+            if (top < 30 || anchorY > viewport.height / 2) {
                 top = anchorY + 30;
                 direction = 'down';
             }
             top = Math.max(30, Math.min(top, viewport.height - menuRect.height - 30));
             let left = anchorX - menuRect.width / 2;
             left = Math.max(10, Math.min(left, viewport.width - menuRect.width - 10));
-
+        
             element.style.top = `${top + window.scrollY}px`;
             element.style.left = `${left + window.scrollX}px`;
             element.className = direction === 'up' ? 'upward' : '';
+        
+            // 通用尺寸限制
+            element.style.maxHeight = `${Math.min(600, viewport.height - 60)}px`;
+            element.style.maxWidth = `${Math.min(500, viewport.width - 40)}px`;
         }
 
         function getEventPosition(event) {
@@ -482,37 +507,83 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 统一显示翻译结果
         function showTranslationResult(result) {
-            translateTextarea.value = result;
+            // // translateTextarea.value = result;
+            translationResult.innerHTML = result;  // 使用innerHTML而不是value
             translatePopup.style.display = 'block';
             smartPosition(translatePopup, lastPosition.x, lastPosition.y);
         }
 
 
+        const contentLang = document.querySelector('meta[name="content-lang"]').content;
         // 专用翻译API调用函数
         async function translateWithGemini(text) {
         // async function translateWithGemini(text, retryCount = 2) {//retryCount = 2有点多余
             try {
                 // const targetLang = navigator.language.startsWith('zh') ? '英文' : '简体中文';
                 // const prompt = `请将以下内容翻译为${targetLang}，只需返回译文不要任何解释：\n"${text}"`;
-                
-                let symbol = "'";
-                const prompt = symbol + text + symbol+ `请自动帮我检测单引号中内容的语言（中文，英文，德语中的一种），并自动翻译成另外两种语言并给出该对应语言的例句以及例句的中文翻译。按照以下格式输出：\n检测到的语言：中文 \n**翻译：** \n* **英文:** stapler \n* **例句:** I need a stapler to fasten these papers together. 我需要一个订书机来把这些纸订在一起。\n* **德文:** Hefter \n* **例句:** Der Hefter ist kaputt. 订书机坏了。`;
-                // console.log(prompt);
+                // ，英文，德语的另外两种语言并给出该对应语言的例句以及例句的中文翻译。按照以下格式输出：\n检测到的语言：中文 \n**翻译：** \n* **英文:** stapler \n* **例句:** I need a stapler to fasten these papers together. 我需要一个订书机来把这些纸订在一起。\n* **德文:** Hefter \n* **例句:** Der Hefter ist kaputt. 订书机坏了。
+                let symbol = "#";
+                let prompt = symbol + text + symbol + `请按照以下格式输出：
+
+**原文：** ${text}
+**语言：**${contentLang}
+
+如果语言是“中文”，则执行以下操作：
+**德语：**
+**翻译：**
+**例句：**
+**例句中文翻译：**
+----------------------------------
+**英语：**
+**翻译：**
+**例句：**
+**例句中文翻译：**
+
+如果语言是“英语”，则执行以下操作：
+**德语：**
+**翻译：**
+**例句：**
+**例句中文翻译：**
+----------------------------------
+**中文：**
+**翻译：**
+**例句：** (可选，如无例句可不提供)
+**例句中文翻译：** (可选，如无例句可不提供)
+
+如果语言是“德语”，则执行以下操作：
+**翻译：**
+**例句1：**
+**例句1中文翻译：**
+**例句2：**
+**例句2中文翻译：**
+----------------------------------
+**中文精讲：** (请提供详细解释，包含语法点和文化背景等)
+----------------------------------
+**英语：**
+**翻译：**
+**例句：**
+**例句中文翻译：**
+
+`;
+// console.log(prompt);
 
                 const responseText = await sendMessageToAPI(prompt);
                 
                 // 清理响应内容
                 let cleanedText = responseText
-                    .replace(/["“”]/g, '') // 移除引号
-                    .replace(/^\s*Translation:\s*/i, '') // 移除可能的前缀
+                    .replace(/["“”]/g, '')
+                    .replace(/^\s*Translation:\s*/i, '')
                     .trim();
 
-                // 将 Markdown 转换为 HTML
-                const htmlText = marked.parse(cleanedText);
-                console.log(htmlText);
-
-                return htmlText; // 返回转换后的 HTML
-                    
+                try {
+                    const htmlText = marked.parse(cleanedText);
+                    // 使用 DOMPurify 消毒 HTML
+                    const sanitizedHtml = DOMPurify.sanitize(htmlText);
+                    return sanitizedHtml;
+                } catch (markdownError) {
+                    console.error("Markdown 解析错误:", markdownError);
+                    return `<p>Markdown 解析错误: ${markdownError.message}</p>`; // 返回错误信息
+                }
             } catch (error) {
                 // if (retryCount > 0) {
                 //     console.log(`剩余重试次数: ${retryCount}`);
