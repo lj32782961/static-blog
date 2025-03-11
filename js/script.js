@@ -514,16 +514,58 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
 
+        const contentLang = document.querySelector('meta[name="content-lang"]').content;
         // 专用翻译API调用函数
         async function translateWithGemini(text) {
         // async function translateWithGemini(text, retryCount = 2) {//retryCount = 2有点多余
             try {
                 // const targetLang = navigator.language.startsWith('zh') ? '英文' : '简体中文';
                 // const prompt = `请将以下内容翻译为${targetLang}，只需返回译文不要任何解释：\n"${text}"`;
-                
-                let symbol = "'";
-                const prompt = symbol + text + symbol+ `请自动帮我检测单引号中内容的语言（中文，英文，德语中的一种），并自动翻译成另外两种语言并给出该对应语言的例句以及例句的中文翻译。按照以下格式输出：\n检测到的语言：中文 \n**翻译：** \n* **英文:** stapler \n* **例句:** I need a stapler to fasten these papers together. 我需要一个订书机来把这些纸订在一起。\n* **德文:** Hefter \n* **例句:** Der Hefter ist kaputt. 订书机坏了。`;
-                // console.log(prompt);
+                // ，英文，德语的另外两种语言并给出该对应语言的例句以及例句的中文翻译。按照以下格式输出：\n检测到的语言：中文 \n**翻译：** \n* **英文:** stapler \n* **例句:** I need a stapler to fasten these papers together. 我需要一个订书机来把这些纸订在一起。\n* **德文:** Hefter \n* **例句:** Der Hefter ist kaputt. 订书机坏了。
+                let symbol = "#";
+const prompt = symbol + text + symbol + `请按照以下格式输出：
+
+**原文：** ${text}
+**语言：**${contentLang}
+
+如果语言是“中文”，则执行以下操作：
+**德语：**
+**翻译：**
+**例句：**
+**例句中文翻译：**
+----------------------------------
+**英语：**
+**翻译：**
+**例句：**
+**例句中文翻译：**
+
+如果语言是“英语”，则执行以下操作：
+**德语：**
+**翻译：**
+**例句：**
+**例句中文翻译：**
+----------------------------------
+**中文：**
+**翻译：**
+**例句：** (可选，如无例句可不提供)
+**例句中文翻译：** (可选，如无例句可不提供)
+
+如果语言是“德语”，则执行以下操作：
+**翻译：**
+**例句1：**
+**例句1中文翻译：**
+**例句2：**
+**例句2中文翻译：**
+----------------------------------
+**中文精讲：** (请提供详细解释，包含语法点和文化背景等)
+----------------------------------
+**英语：**
+**翻译：**
+**例句：**
+**例句中文翻译：**
+
+`;
+// console.log(prompt);
 
                 const responseText = await sendMessageToAPI(prompt);
                 

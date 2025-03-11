@@ -449,13 +449,13 @@ footer {
   }
   
   .translation-content ul {
-    margin: 8px 0;
+    margin: 4px 0;
     padding-left: 20px;
     list-style-type: disc; /* 明确指定符号类型 */
   }
   
   .translation-content li {
-    margin: 6px 0; /* 增大间距 */
+    margin: 4px 0; /* 增大间距 */
     padding-left: 8px; /* 内容缩进 */
   }
   
@@ -484,13 +484,13 @@ footer {
   
   /* 段落样式 */
   .translation-content p {
-    margin: 8px 0;
+    margin: 4px 0;
     line-height: 1.6;
   }
   
   /* 有序列表 */
   .translation-content ol {
-    margin: 8px 0;
+    margin: 4px 0;
     padding-left: 24px;
     list-style-type: decimal;
   }
@@ -522,7 +522,7 @@ footer {
     border: 0;
     height: 1px;
     background: #ecf0f1;
-    margin: 16px 0;
+    margin: 4px 0;
   }
   
   /* 表格样式 */
@@ -614,7 +614,7 @@ footer {
         font-size: 14px;
         padding: 8px;
     }
-    
+
     .translation-content h3 {
         font-size: 1.05em;
       }
