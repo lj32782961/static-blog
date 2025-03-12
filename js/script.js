@@ -518,6 +518,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
         const contentLang = document.querySelector('meta[name="content-lang"]').content;
+        const mainContent = document.querySelector('main').textContent;
+        // console.log(mainContent)
         // 专用翻译API调用函数
         async function translateWithGemini(text) {
         // async function translateWithGemini(text, retryCount = 2) {//retryCount = 2有点多余
@@ -525,11 +527,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 // const targetLang = navigator.language.startsWith('zh') ? '英文' : '简体中文';
                 // const prompt = `请将以下内容翻译为${targetLang}，只需返回译文不要任何解释：\n"${text}"`;
                 // ，英文，德语的另外两种语言并给出该对应语言的例句以及例句的中文翻译。按照以下格式输出：\n检测到的语言：中文 \n**翻译：** \n* **英文:** stapler \n* **例句:** I need a stapler to fasten these papers together. 我需要一个订书机来把这些纸订在一起。\n* **德文:** Hefter \n* **例句:** Der Hefter ist kaputt. 订书机坏了。
-                let symbol = "#";
+                let symbol = "^";
                 let prompt = symbol + text + symbol;
 
             if (contentLang === "中文") {
-                prompt = prompt + `请按照以下格式输出：
+                prompt = prompt + `，请翻译${symbol}之间的内容，注意不要添加多余的内容。在翻译的时候，特别注意其与全文${mainContent}中其他部分的语义关联。  例如：指出关键词在全文中出现的其他地方，或指出关键词相关的主题或概念。  避免使用与全文语境不符的翻译。 并按照以下格式输出：
 **原文：** ${text}
 **语言：** ${contentLang}
 ----------------------------------
@@ -544,7 +546,7 @@ document.addEventListener('DOMContentLoaded', () => {
 **例句中文翻译：**
 `;
             }else if (contentLang === "英语"){
-                prompt = prompt + `请按照以下格式输出：
+                prompt = prompt + `，请翻译${symbol}之间的内容，注意不要添加多余的内容。在翻译的时候，特别注意其与全文${mainContent}中其他部分的语义关联。  例如：指出关键词在全文中出现的其他地方，或指出关键词相关的主题或概念。  避免使用与全文语境不符的翻译。 并按照以下格式输出：
 **原文：** ${text}
 **语言：** ${contentLang}
 ----------------------------------
@@ -559,7 +561,7 @@ document.addEventListener('DOMContentLoaded', () => {
 **例句中文翻译：** (可选，如无例句可不提供)
 `;
             }else if (contentLang ==="德语"){
-                prompt = prompt + `请按照以下格式输出：
+                prompt = prompt + `，请翻译${symbol}之间的内容，注意不要添加多余的内容。在翻译的时候，特别注意其与全文${mainContent}中其他部分的语义关联。  例如：指出关键词在全文中出现的其他地方，或指出关键词相关的主题或概念。  避免使用与全文语境不符的翻译。 并按照以下格式输出：
 **原文：** ${text}
 **语言：** ${contentLang}
 ----------------------------------
